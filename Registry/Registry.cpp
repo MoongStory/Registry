@@ -49,7 +49,10 @@ int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::stri
 
 	if (lResult == ERROR_SUCCESS)
 	{
-		output = perf_data;
+		if (perf_data != nullptr)
+		{
+			output = perf_data;
+		}
 	}
 	else
 	{
