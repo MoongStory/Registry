@@ -1,7 +1,9 @@
-#pragma once
+#if _MSC_VER > 1000
+	#pragma once
+#endif
 
-#ifndef REGISTRY_H_
-#define REGISTRY_H_
+#ifndef _REGISTRY_H_
+#define _REGISTRY_H_
 
 #include <Windows.h>
 
@@ -36,4 +38,4 @@ namespace MOONG
 	}
 }
 
-#endif REGISTRY_H_
+#endif _REGISTRY_H_
