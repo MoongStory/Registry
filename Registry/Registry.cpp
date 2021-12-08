@@ -19,20 +19,21 @@ int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::stri
 	}
 
 	DWORD buffer_size = this->TOTALBYTES;
-	char* perf_data = (char *)malloc(buffer_size);
+	char* buffer = (char *)malloc(buffer_size);
+	char* buffer_temp = nullptr;
 	DWORD cb_data = buffer_size;
 	
-	lResult = RegQueryValueExA(hkey_result, value.c_str(), NULL, NULL, (LPBYTE)perf_data, &cb_data);
+	lResult = RegQueryValueExA(hkey_result, value.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
 	while (lResult == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
 
 		buffer_size += this->BYTEINCREMENT;
-		char* temp = perf_data;
-		perf_data = (char *)realloc(perf_data, buffer_size);
-		if (perf_data == nullptr)
+		buffer_temp = buffer;
+		buffer = (char *)realloc(buffer, buffer_size);
+		if (buffer == nullptr)
 		{
-			free(temp);
+			free(buffer_temp);
 
 			return MOONG::REGISTRY::RETURN_CODE::ERROR_REALLOC;
 		}
@@ -43,15 +44,15 @@ int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::stri
 			value.c_str(),
 			NULL,
 			NULL,
-			(LPBYTE)perf_data,
+			(LPBYTE)buffer,
 			&cb_data);
 	}
 
 	if (lResult == ERROR_SUCCESS)
 	{
-		if (perf_data != nullptr)
+		if (buffer != nullptr)
 		{
-			output = perf_data;
+			output = buffer;
 		}
 	}
 	else
