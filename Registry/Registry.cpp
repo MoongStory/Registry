@@ -1,5 +1,12 @@
 #include "Registry.h"
 
+MOONG::REGISTRY::Registry::Registry() :
+TOTALBYTES(8192),
+BYTEINCREMENT(4096)
+{
+
+}
+
 int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::string value, std::string& output)
 {
 	HKEY hkey_result = nullptr;

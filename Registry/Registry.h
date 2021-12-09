@@ -29,13 +29,15 @@ namespace MOONG
 		class Registry
 		{
 		public:
+			Registry();
+
 			int Read(HKEY hKeyRoot, std::string subKey, std::string value, std::string& output);
 			//TODO: int Write();
 			//TODO: int Delete();
 
 		private:
-			const unsigned int TOTALBYTES = 8192;
-			const unsigned int BYTEINCREMENT = 4096;
+			const unsigned int TOTALBYTES;
+			const unsigned int BYTEINCREMENT;
 		};
 	}
 }
