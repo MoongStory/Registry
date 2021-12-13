@@ -13,9 +13,20 @@ int MOONG::REGISTRY::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR va
 {
 	CRegKey reg_key;
 
-	reg_key.Create(key_root, key_name);
-	reg_key.SetStringValue(value_name, value);
-	reg_key.Close();
+	if (reg_key.Create(key_root, key_name) != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_CREATE;
+	}
+
+	if (reg_key.SetStringValue(value_name, value) != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_SET_VALUE;
+	}
+
+	if (reg_key.Close() != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+	}
 
 	return EXIT_SUCCESS;
 }
@@ -24,9 +35,20 @@ int MOONG::REGISTRY::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR va
 {
 	CRegKey reg_key;
 
-	reg_key.Create(key_root, key_name);
-	reg_key.SetDWORDValue(value_name, value);
-	reg_key.Close();
+	if (reg_key.Create(key_root, key_name) != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_CREATE;
+	}
+
+	if (reg_key.SetDWORDValue(value_name, value) != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_SET_VALUE;
+	}
+
+	if (reg_key.Close() != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+	}
 
 	return EXIT_SUCCESS;
 }
@@ -40,9 +62,15 @@ int MOONG::REGISTRY::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR val
 		return MOONG::REGISTRY::RETURN_CODE::ERROR_REG_OPEN;
 	}
 
-	reg_key.QueryStringValue(value_name, value, chars);
+	if (reg_key.QueryStringValue(value_name, value, chars) != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_READ;
+	}
 
-	reg_key.Close();
+	if (reg_key.Close() != ERROR_SUCCESS)
+	{
+		MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+	}
 
 	return EXIT_SUCCESS;
 }
@@ -57,7 +85,7 @@ int MOONG::REGISTRY::Registry::Read(HKEY key, std::string sub_key, std::string v
 	{
 		if (lResult == ERROR_FILE_NOT_FOUND)
 		{
-			return MOONG::REGISTRY::RETURN_CODE::KEY_NOT_FOUND;
+			return MOONG::REGISTRY::RETURN_CODE::ERROR_KEY_NOT_FOUND;
 		}
 		else
 		{

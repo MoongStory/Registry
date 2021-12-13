@@ -32,7 +32,7 @@ namespace MOONG
 		{
 			enum RETURN_CODE
 			{
-				KEY_NOT_FOUND = 1,
+				ERROR_KEY_NOT_FOUND = 1,
 				ERROR_REG_OPEN_KEY_EX = 2,
 				ERROR_REG_QUERY_VALUE_EX = 3,
 				ERROR_REALLOC = 4,
