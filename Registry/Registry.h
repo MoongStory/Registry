@@ -36,7 +36,11 @@ namespace MOONG
 				ERROR_REG_OPEN_KEY_EX = 2,
 				ERROR_REG_QUERY_VALUE_EX = 3,
 				ERROR_REALLOC = 4,
-				ERROR_REG_OPEN = 5
+				ERROR_REG_OPEN = 5,
+				ERROR_READ = 6,
+				ERROR_CLOSE = 7,
+				ERROR_CREATE = 8,
+				ERROR_SET_VALUE = 9
 			};
 		}
 
@@ -52,6 +56,7 @@ namespace MOONG
 			//		value가 가리키는 버퍼의 크기 (tchars)입니다. 메서드가 반환 될 때 chars는 null 종결 문자를 포함하여 검색 된 문자열의 크기(tchars)를 포함합니다.
 			int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPTSTR value, ULONG* chars);
 			int Read(HKEY key, std::string sub_key, std::string value_name, std::string& output);
+			int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD& value);
 
 			int Delete(HKEY hKeyRoot, std::string subKey);
 

@@ -112,6 +112,28 @@ int MOONG::REGISTRY::Registry::Read(HKEY key, std::string sub_key, std::string v
 	return EXIT_SUCCESS;
 }
 
+int MOONG::REGISTRY::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD& value)
+{
+	CRegKey reg_key;
+
+	if (reg_key.Open(key_root, key_name, KEY_READ) != ERROR_SUCCESS)
+	{
+		return MOONG::REGISTRY::RETURN_CODE::ERROR_REG_OPEN;
+	}
+
+	if (reg_key.QueryDWORDValue(value_name, value) != ERROR_SUCCESS)
+	{
+		return MOONG::REGISTRY::RETURN_CODE::ERROR_READ;
+	}
+
+	if (reg_key.Close() != ERROR_SUCCESS)
+	{
+		return MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+	}
+
+	return EXIT_SUCCESS;
+}
+
 int MOONG::REGISTRY::Registry::Delete(HKEY hKeyRoot, std::string subKey)
 {
 	//LONG lResult;
