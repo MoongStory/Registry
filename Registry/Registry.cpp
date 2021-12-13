@@ -1,5 +1,7 @@
 #include "Registry.h"
 
+#include <atlbase.h>
+
 MOONG::REGISTRY::Registry::Registry() :
 TOTALBYTES(8192),
 BYTEINCREMENT(4096)
@@ -7,11 +9,49 @@ BYTEINCREMENT(4096)
 
 }
 
-int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::string value, std::string& output)
+int MOONG::REGISTRY::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPCTSTR value)
+{
+	CRegKey reg_key;
+
+	reg_key.Create(key_root, key_name);
+	reg_key.SetStringValue(value_name, value);
+	reg_key.Close();
+
+	return EXIT_SUCCESS;
+}
+
+int MOONG::REGISTRY::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD value)
+{
+	CRegKey reg_key;
+
+	reg_key.Create(key_root, key_name);
+	reg_key.SetDWORDValue(value_name, value);
+	reg_key.Close();
+
+	return EXIT_SUCCESS;
+}
+
+int MOONG::REGISTRY::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPTSTR value, ULONG* chars)
+{
+	CRegKey reg_key;
+
+	if (reg_key.Open(key_root, key_name, KEY_READ) != ERROR_SUCCESS)
+	{
+		return MOONG::REGISTRY::RETURN_CODE::ERROR_REG_OPEN;
+	}
+
+	reg_key.QueryStringValue(value_name, value, chars);
+
+	reg_key.Close();
+
+	return EXIT_SUCCESS;
+}
+
+int MOONG::REGISTRY::Registry::Read(HKEY key, std::string sub_key, std::string value_name, std::string& output)
 {
 	HKEY hkey_result = nullptr;
 
-	LSTATUS lResult = RegOpenKeyExA(hKeyRoot, subKey.c_str(), 0, KEY_READ, &hkey_result);
+	LSTATUS lResult = RegOpenKeyExA(key, sub_key.c_str(), 0, KEY_READ, &hkey_result);
 
 	if (lResult != ERROR_SUCCESS)
 	{
@@ -30,7 +70,7 @@ int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::stri
 	char* buffer_temp = nullptr;
 	DWORD cb_data = buffer_size;
 	
-	lResult = RegQueryValueExA(hkey_result, value.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
+	lResult = RegQueryValueExA(hkey_result, value_name.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
 	while (lResult == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
@@ -48,7 +88,7 @@ int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::stri
 		cb_data = buffer_size;
 
 		lResult = RegQueryValueExA(hkey_result,
-			value.c_str(),
+			value_name.c_str(),
 			NULL,
 			NULL,
 			(LPBYTE)buffer,
@@ -68,6 +108,35 @@ int MOONG::REGISTRY::Registry::Read(HKEY hKeyRoot, std::string subKey, std::stri
 	}
 
 	RegCloseKey(hkey_result);
+
+	return EXIT_SUCCESS;
+}
+
+int MOONG::REGISTRY::Registry::Delete(HKEY hKeyRoot, std::string subKey)
+{
+	//LONG lResult;
+	//HKEY hKey;
+	//DWORD dwBytes = 100;
+	//CString str = "abc";
+
+	//// open Regstry Key
+	//lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+	//	"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+	//	0, KEY_ALL_ACCESS, &hKey);
+	//if (lResult != ERROR_SUCCESS)
+	//{
+	//	AfxMessageBox("Register Open Error");
+	//}
+
+
+	//lResult = RegDeleteValue(hKey, str);  // 삭제
+
+	//if (lResult == ERROR_SUCCESS)
+	//	AfxMessageBox("레지스터 삭제 성공");
+	//else
+	//	AfxMessageBox("실패당...ㅠㅠ");
+
+	//RegCloseKey(hKey);
 
 	return EXIT_SUCCESS;
 }
