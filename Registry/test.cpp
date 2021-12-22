@@ -158,5 +158,9 @@ int main()
 		std::cout << "읽기 결과 (DWORD)[" << dword_read_value << "]" << std::endl;
 	}
 
+	status = registry.Delete(HKEY_CURRENT_USER, wchar_sub_key, dword_value_name);
+
+	status = registry.Delete(HKEY_CURRENT_USER, wchar_sub_key);
+
 	return EXIT_SUCCESS;
 }

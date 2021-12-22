@@ -259,6 +259,30 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key)
+{
+	LSTATUS status = RegDeleteKeyExA(key, sub_key.GetBuffer(), KEY_ALL_ACCESS, 0);
+
+	return status;
+}
+
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key, CStringA value_name)
+{
+	HKEY key_result = nullptr;
+
+	LSTATUS status = RegOpenKeyExA(key, sub_key.GetBuffer(), 0, KEY_ALL_ACCESS, &key_result);
+	if (status != ERROR_SUCCESS)
+	{
+		return status;
+	}
+
+	status = RegDeleteValueA(key_result, value_name.GetBuffer());
+
+	RegCloseKey(key_result);
+
+	return status;
+}
+
 
 
 
@@ -348,35 +372,6 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 //	{
 //		return MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
 //	}
-//
-//	return EXIT_SUCCESS;
-//}
-//
-//int MOONG::REGISTRY::Registry::Delete(HKEY hKeyRoot, std::string subKey)
-//{
-//	//LONG lResult;
-//	//HKEY hKey;
-//	//DWORD dwBytes = 100;
-//	//CString str = "abc";
-//
-//	//// open Regstry Key
-//	//lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-//	//	"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-//	//	0, KEY_ALL_ACCESS, &hKey);
-//	//if (lResult != ERROR_SUCCESS)
-//	//{
-//	//	AfxMessageBox("Register Open Error");
-//	//}
-//
-//
-//	//lResult = RegDeleteValue(hKey, str);  // 삭제
-//
-//	//if (lResult == ERROR_SUCCESS)
-//	//	AfxMessageBox("레지스터 삭제 성공");
-//	//else
-//	//	AfxMessageBox("실패당...ㅠㅠ");
-//
-//	//RegCloseKey(hKey);
 //
 //	return EXIT_SUCCESS;
 //}
