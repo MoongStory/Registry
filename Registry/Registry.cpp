@@ -11,7 +11,7 @@ BYTEINCREMENT(4096)
 
 
 
-LSTATUS MOONG::REGISTRY::Registry::Write(HKEY key, CStringA sub_key, CStringA value_name, CStringA data)
+LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStringA value_name, CStringA data)
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -39,7 +39,7 @@ LSTATUS MOONG::REGISTRY::Registry::Write(HKEY key, CStringA sub_key, CStringA va
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(HKEY key, CStringA sub_key, CStringA value_name, char* output, UINT output_length)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const UINT output_length)
 {
 	HKEY key_result = nullptr;
 
@@ -85,7 +85,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(HKEY key, CStringA sub_key, CStringA val
 	{
 		if (buffer != nullptr)
 		{
-			StringCbCopyA(output, output_length, buffer);
+			StringCchCopyA(output, output_length, buffer);
 		}
 	}
 
@@ -95,6 +95,27 @@ LSTATUS MOONG::REGISTRY::Registry::Read(HKEY key, CStringA sub_key, CStringA val
 	}
 
 	RegCloseKey(key_result);
+
+	return status;
+}
+
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const UINT output_length)
+{
+	char* buffer = new char[output_length];
+
+	LSTATUS status = this->Read(key, sub_key, value_name, buffer, output_length);
+	if (status != ERROR_SUCCESS)
+	{
+		delete[] buffer;
+
+		return status;
+	}
+
+	CStringW convert_string = buffer;
+
+	delete[] buffer;
+
+	StringCchCopyW(output, output_length, convert_string.GetBuffer());
 
 	return status;
 }
