@@ -120,6 +120,66 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, std::string& output)
+{
+	HKEY key_result = nullptr;
+
+	LSTATUS status = RegOpenKeyExA(key, sub_key.GetBuffer(), 0, KEY_READ, &key_result);
+	if (status != ERROR_SUCCESS)
+	{
+		return status;
+	}
+
+	DWORD buffer_size = this->TOTALBYTES;
+	char* buffer = (char*)malloc(buffer_size);
+	char* buffer_temp = nullptr;
+	DWORD cb_data = buffer_size;
+
+	status = RegQueryValueExA(key_result, value_name.GetBuffer(), NULL, NULL, (LPBYTE)buffer, &cb_data);
+	while (status == ERROR_MORE_DATA)
+	{
+		// Get a buffer that is big enough.
+
+		buffer_size += this->BYTEINCREMENT;
+		buffer_temp = buffer;
+		buffer = (char*)realloc(buffer, buffer_size);
+		if (buffer == nullptr)
+		{
+			free(buffer_temp);
+
+			RegCloseKey(key_result);
+
+			return MOONG::REGISTRY::RETURN_CODE::ERROR_REALLOC;
+		}
+
+		cb_data = buffer_size;
+
+		status = RegQueryValueExA(key_result,
+			value_name.GetBuffer(),
+			NULL,
+			NULL,
+			(LPBYTE)buffer,
+			&cb_data);
+	}
+
+	if (status == ERROR_SUCCESS)
+	{
+		if (buffer != nullptr)
+		{
+			output = buffer;
+		}
+	}
+
+	if (buffer != nullptr)
+	{
+		free(buffer);
+	}
+
+	RegCloseKey(key_result);
+
+	return status;
+}
+
 
 
 

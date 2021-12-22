@@ -77,7 +77,23 @@ int main()
 	}
 	else
 	{
-		printf("읽기 결과 (wchar)[%ls]", wchar_read_value);
+		printf("읽기 결과 (wchar)[%ls]\n", wchar_read_value);
+	}
+
+	std::string string_read_value;
+	status = registry.Read(HKEY_CURRENT_USER, wchar_sub_key, string_value_name.c_str(), string_read_value);
+	if (status != ERROR_SUCCESS)
+	{
+		char* message = NULL;
+		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&message, 0, NULL);
+
+		std::cout << "Write fail error_code[" << status << "], message[" << message << "]" << std::endl;
+
+		LocalFree(message);
+	}
+	else
+	{
+		std::cout << "읽기 결과 (string)[" << string_read_value << "]" << std::endl;
 	}
 
 	return EXIT_SUCCESS;
