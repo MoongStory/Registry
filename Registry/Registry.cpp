@@ -180,6 +180,20 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringA& output)
+{
+	std::string buffer;
+	LSTATUS status = this->Read(key, sub_key, value_name, buffer);
+	if (status != ERROR_SUCCESS)
+	{
+		return status;
+	}
+
+	output = buffer.c_str();
+
+	return status;
+}
+
 
 
 
