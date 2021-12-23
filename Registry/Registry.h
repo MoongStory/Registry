@@ -30,8 +30,8 @@ namespace MOONG
 			LSTATUS Write(const HKEY key, CStringA sub_key, CStringA value_name, CStringA data);
 			LSTATUS Write(const HKEY key, CStringA sub_key, CStringA value_name, const DWORD data);
 
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const UINT output_length);
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const UINT output_length);
+			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const unsigned int output_length);
+			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const unsigned int output_length);
 			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, std::string &output);
 			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringA &output);
 			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringW& output);

@@ -67,7 +67,7 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStri
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const UINT output_length)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const unsigned int output_length)
 {
 	HKEY key_result = nullptr;
 
@@ -127,7 +127,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const UINT output_length)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const unsigned int output_length)
 {
 	char* buffer = new char[output_length];
 
