@@ -11,7 +11,7 @@ BYTEINCREMENT(4096)
 
 
 
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStringA value_name, CStringA data)
+LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStringA value_name, CStringA data) const
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -39,7 +39,7 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStri
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStringA value_name, const DWORD data)
+LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStringA value_name, const DWORD data) const
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -67,7 +67,7 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStri
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const unsigned int output_length)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const unsigned int output_length) const
 {
 	HKEY key_result = nullptr;
 
@@ -127,7 +127,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const unsigned int output_length)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const unsigned int output_length) const
 {
 	char* buffer = new char[output_length];
 
@@ -148,7 +148,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, std::string& output)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, std::string& output) const
 {
 	HKEY key_result = nullptr;
 
@@ -203,7 +203,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringA& output)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringA& output) const
 {
 	std::string buffer;
 	LSTATUS status = this->Read(key, sub_key, value_name, buffer);
@@ -217,7 +217,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringW& output)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringW& output) const
 {
 	std::string buffer;
 	LSTATUS status = this->Read(key, sub_key, value_name, buffer);
@@ -231,7 +231,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, DWORD* output)
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, DWORD* output) const
 {
 	HKEY key_result = nullptr;
 
@@ -259,14 +259,14 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key)
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key) const
 {
 	LSTATUS status = RegDeleteKeyExA(key, sub_key.GetBuffer(), KEY_ALL_ACCESS, 0);
 
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key, CStringA value_name)
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key, CStringA value_name) const
 {
 	HKEY key_result = nullptr;
 
