@@ -11,15 +11,15 @@ BYTEINCREMENT(4096)
 
 
 
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStringA value_name, CStringA data) const
+LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const CStringA sub_key, const CStringA value_name, const CStringA data) const
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
 
-	LSTATUS status = RegCreateKeyExA(key, sub_key.GetBuffer(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
+	LSTATUS status = RegCreateKeyExA(key, sub_key.GetString(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
 	if (status == ERROR_SUCCESS)
 	{
-		status = RegSetValueExA(key_result, value_name.GetBuffer(), 0, REG_SZ, (const BYTE*)(data.GetBuffer()), data.GetLength());
+		status = RegSetValueExA(key_result, value_name.GetString(), 0, REG_SZ, (const BYTE*)(data.GetString()), data.GetLength());
 		if (status != ERROR_SUCCESS)
 		{
 			RegCloseKey(key_result);
@@ -39,15 +39,15 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStri
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStringA value_name, const DWORD data) const
+LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const CStringA sub_key, const CStringA value_name, const DWORD data) const
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
 
-	LSTATUS status = RegCreateKeyExA(key, sub_key.GetBuffer(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
+	LSTATUS status = RegCreateKeyExA(key, sub_key.GetString(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
 	if (status == ERROR_SUCCESS)
 	{
-		status = RegSetValueExA(key_result, value_name.GetBuffer(), 0, REG_DWORD, (const BYTE*)(&data), sizeof(data));
+		status = RegSetValueExA(key_result, value_name.GetString(), 0, REG_DWORD, (const BYTE*)(&data), sizeof(data));
 		if (status != ERROR_SUCCESS)
 		{
 			RegCloseKey(key_result);
@@ -67,11 +67,11 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, CStringA sub_key, CStri
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const unsigned int output_length) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const CStringA sub_key, const CStringA value_name, char* const output, const unsigned int output_length) const
 {
 	HKEY key_result = nullptr;
 
-	LSTATUS status = RegOpenKeyExA(key, sub_key.GetBuffer(), 0, KEY_READ, &key_result);
+	LSTATUS status = RegOpenKeyExA(key, sub_key.GetString(), 0, KEY_READ, &key_result);
 	if (status != ERROR_SUCCESS)
 	{
 		return status;
@@ -82,7 +82,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	char* buffer_temp = nullptr;
 	DWORD cb_data = buffer_size;
 
-	status = RegQueryValueExA(key_result, value_name.GetBuffer(), NULL, NULL, (LPBYTE)buffer, &cb_data);
+	status = RegQueryValueExA(key_result, value_name.GetString(), NULL, NULL, (LPBYTE)buffer, &cb_data);
 	while (status == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
@@ -102,7 +102,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 		cb_data = buffer_size;
 
 		status = RegQueryValueExA(key_result,
-			value_name.GetBuffer(),
+			value_name.GetString(),
 			NULL,
 			NULL,
 			(LPBYTE)buffer,
@@ -127,7 +127,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const unsigned int output_length) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const CStringA sub_key, const CStringA value_name, wchar_t* const output, const unsigned int output_length) const
 {
 	char* buffer = new char[output_length];
 
@@ -148,11 +148,11 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, std::string& output) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const CStringA sub_key, const CStringA value_name, std::string& output) const
 {
 	HKEY key_result = nullptr;
 
-	LSTATUS status = RegOpenKeyExA(key, sub_key.GetBuffer(), 0, KEY_READ, &key_result);
+	LSTATUS status = RegOpenKeyExA(key, sub_key.GetString(), 0, KEY_READ, &key_result);
 	if (status != ERROR_SUCCESS)
 	{
 		return status;
@@ -163,7 +163,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	char* buffer_temp = nullptr;
 	DWORD cb_data = buffer_size;
 
-	status = RegQueryValueExA(key_result, value_name.GetBuffer(), NULL, NULL, (LPBYTE)buffer, &cb_data);
+	status = RegQueryValueExA(key_result, value_name.GetString(), NULL, NULL, (LPBYTE)buffer, &cb_data);
 	while (status == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
@@ -182,7 +182,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 
 		cb_data = buffer_size;
 
-		status = RegQueryValueExA(key_result, value_name.GetBuffer(), NULL, NULL, (LPBYTE)buffer, &cb_data);
+		status = RegQueryValueExA(key_result, value_name.GetString(), NULL, NULL, (LPBYTE)buffer, &cb_data);
 	}
 
 	if (status == ERROR_SUCCESS)
@@ -203,7 +203,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringA& output) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const CStringA sub_key, const CStringA value_name, CStringA& output) const
 {
 	std::string buffer;
 	LSTATUS status = this->Read(key, sub_key, value_name, buffer);
@@ -217,7 +217,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringW& output) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const CStringA sub_key, const CStringA value_name, CStringW& output) const
 {
 	std::string buffer;
 	LSTATUS status = this->Read(key, sub_key, value_name, buffer);
@@ -231,11 +231,11 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStringA value_name, DWORD* output) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const CStringA sub_key, const CStringA value_name, DWORD* output) const
 {
 	HKEY key_result = nullptr;
 
-	LSTATUS status = RegOpenKeyExA(key, sub_key.GetBuffer(), 0, KEY_READ, &key_result);
+	LSTATUS status = RegOpenKeyExA(key, sub_key.GetString(), 0, KEY_READ, &key_result);
 	if (status != ERROR_SUCCESS)
 	{
 		return status;
@@ -244,7 +244,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	DWORD buffer = 0;
 	DWORD cb_data = sizeof(DWORD);
 
-	status = RegQueryValueExA(key_result, value_name.GetBuffer(), NULL, NULL, (LPBYTE)(&buffer), &cb_data);
+	status = RegQueryValueExA(key_result, value_name.GetString(), NULL, NULL, (LPBYTE)(&buffer), &cb_data);
 	if (status != ERROR_SUCCESS)
 	{
 		RegCloseKey(key_result);
@@ -259,24 +259,24 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, CStringA sub_key, CStrin
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key) const
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const CStringA sub_key) const
 {
-	LSTATUS status = RegDeleteKeyExA(key, sub_key.GetBuffer(), KEY_ALL_ACCESS, 0);
+	LSTATUS status = RegDeleteKeyExA(key, sub_key.GetString(), KEY_ALL_ACCESS, 0);
 
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, CStringA sub_key, CStringA value_name) const
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const CStringA sub_key, const CStringA value_name) const
 {
 	HKEY key_result = nullptr;
 
-	LSTATUS status = RegOpenKeyExA(key, sub_key.GetBuffer(), 0, KEY_ALL_ACCESS, &key_result);
+	LSTATUS status = RegOpenKeyExA(key, sub_key.GetString(), 0, KEY_ALL_ACCESS, &key_result);
 	if (status != ERROR_SUCCESS)
 	{
 		return status;
 	}
 
-	status = RegDeleteValueA(key_result, value_name.GetBuffer());
+	status = RegDeleteValueA(key_result, value_name.GetString());
 
 	RegCloseKey(key_result);
 

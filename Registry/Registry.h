@@ -27,18 +27,18 @@ namespace MOONG
 		public:
 			Registry();
 
-			LSTATUS Write(const HKEY key, CStringA sub_key, CStringA value_name, CStringA data) const;
-			LSTATUS Write(const HKEY key, CStringA sub_key, CStringA value_name, const DWORD data) const;
+			LSTATUS Write(const HKEY key, const CStringA sub_key, const CStringA value_name, const CStringA data) const;
+			LSTATUS Write(const HKEY key, const CStringA sub_key, const CStringA value_name, const DWORD data) const;
 
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, char* const output, const unsigned int output_length) const;
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, wchar_t* const output, const unsigned int output_length) const;
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, std::string &output) const;
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringA &output) const;
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, CStringW& output) const;
-			LSTATUS Read(const HKEY key, CStringA sub_key, CStringA value_name, DWORD* output) const;
+			LSTATUS Read(const HKEY key, const CStringA sub_key, const CStringA value_name, char* const output, const unsigned int output_length) const;
+			LSTATUS Read(const HKEY key, const CStringA sub_key, const CStringA value_name, wchar_t* const output, const unsigned int output_length) const;
+			LSTATUS Read(const HKEY key, const CStringA sub_key, const CStringA value_name, std::string &output) const;
+			LSTATUS Read(const HKEY key, const CStringA sub_key, const CStringA value_name, CStringA&output) const;
+			LSTATUS Read(const HKEY key, const CStringA sub_key, const CStringA value_name, CStringW& output) const;
+			LSTATUS Read(const HKEY key, const CStringA sub_key, const CStringA value_name, DWORD* output) const;
 
-			LSTATUS Delete(const HKEY key, CStringA sub_key) const;
-			LSTATUS Delete(const HKEY key, CStringA sub_key, CStringA value_name) const;
+			LSTATUS Delete(const HKEY key, const CStringA sub_key) const;
+			LSTATUS Delete(const HKEY key, const CStringA sub_key, const CStringA value_name) const;
 
 
 
