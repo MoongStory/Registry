@@ -139,7 +139,7 @@ int main()
 	}
 	else
 	{
-		printf("읽기 결과 (CStringW)[%ls]\n", CStringW_read_value.GetBuffer());
+		printf("읽기 결과 (CStringW)[%ls]\n", CStringW_read_value.GetString());
 	}
 
 	DWORD dword_read_value;

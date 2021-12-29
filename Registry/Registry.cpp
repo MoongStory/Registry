@@ -143,7 +143,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const CStringA sub_key, 
 
 	delete[] buffer;
 
-	StringCchCopyW(output, output_length, convert_string.GetBuffer());
+	StringCchCopyW(output, output_length, convert_string.GetString());
 
 	return status;
 }
