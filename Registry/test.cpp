@@ -4,32 +4,18 @@
 
 int main()
 {
-	const DWORD dword_data = 20211222;
-	const char* const dword_value_name = "dword value name";
+	const DWORD TEST_DWORD_DATA = 20211222;
+	const char* const TEST_DWORD_VALUE_NAME = "dword value name";
 
-	const char* const char_sub_key = "SOFTWARE\\111_char_test";
-	const char* const char_value_name_default = "";
-	const char* const char_value_name = "char value name";
-	const char* const char_data_default = "char data";
-
-	const wchar_t* const wchar_sub_key = L"SOFTWARE\\111_wchar_test";
-	const wchar_t* const wchar_value_name_default = L"";
-	const wchar_t* const wchar_value_name = L"wchar value name";
-	const wchar_t* const wchar_data_default = L"wchar data";
-
-	const TCHAR* const tchar_sub_key = TEXT("SOFTWARE\\111_tchar_test");
-	const TCHAR* const tchar_value_name_default = TEXT("");
-	const TCHAR* const tchar_value_name = TEXT("tchar value name");
-	const TCHAR* const tchar_data_default = TEXT("tchar data");
-
-	const std::string string_sub_key = "SOFTWARE\\111_string_test";
-	const std::string string_value_name_default = "";
-	const std::string string_value_name = "string value name";
-	const std::string string_data_default = "string data";
+	const char* const TEST_SUB_KEY = "SOFTWARE\\111_char_test";
+	const char* const TEST_VALUE_NAME_DEFAULT = "";
+	const char* const TEST_VALUE_NAME = "char value name";
+	const char* const TEST_DATA_DEFAULT = "char data default";
+	const char* const TEST_DATA = "char data";
 
 	MOONG::REGISTRY::Registry registry;
 
-	LSTATUS status = registry.Write(HKEY_CURRENT_USER, wchar_sub_key, char_value_name_default, tchar_data_default);
+	LSTATUS status = registry.Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -40,7 +26,7 @@ int main()
 		LocalFree(message);
 	}
 
-	status = registry.Write(HKEY_CURRENT_USER, wchar_sub_key, string_value_name.c_str(), char_data_default);
+	status = registry.Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, TEST_DATA);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -51,7 +37,7 @@ int main()
 		LocalFree(message);
 	}
 
-	status = registry.Write(HKEY_CURRENT_USER, wchar_sub_key, dword_value_name, dword_data);
+	status = registry.Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, TEST_DWORD_DATA);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -63,7 +49,7 @@ int main()
 	}
 
 	char char_read_value[1024] = { 0 };
-	status = registry.Read(HKEY_CURRENT_USER, wchar_sub_key, string_value_name.c_str(), char_read_value, _countof(char_read_value));
+	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, char_read_value, _countof(char_read_value));
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -79,7 +65,7 @@ int main()
 	}
 
 	wchar_t wchar_read_value[1024] = { 0 };
-	status = registry.Read(HKEY_CURRENT_USER, wchar_sub_key, string_value_name.c_str(), wchar_read_value, _countof(wchar_read_value));
+	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, wchar_read_value, _countof(wchar_read_value));
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -95,7 +81,7 @@ int main()
 	}
 
 	std::string string_read_value;
-	status = registry.Read(HKEY_CURRENT_USER, wchar_sub_key, string_value_name.c_str(), string_read_value);
+	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, string_read_value);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -110,40 +96,8 @@ int main()
 		std::cout << "읽기 결과 (string)[" << string_read_value << "]" << std::endl;
 	}
 
-	CStringA CStringA_read_value;
-	status = registry.Read(HKEY_CURRENT_USER, wchar_sub_key, string_value_name.c_str(), CStringA_read_value);
-	if (status != ERROR_SUCCESS)
-	{
-		char* message = NULL;
-		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&message, 0, NULL);
-
-		std::cout << "Write fail error_code[" << status << "], message[" << message << "]" << std::endl;
-
-		LocalFree(message);
-	}
-	else
-	{
-		std::cout << "읽기 결과 (CStringA)[" << CStringA_read_value << "]" << std::endl;
-	}
-
-	CStringW CStringW_read_value;
-	status = registry.Read(HKEY_CURRENT_USER, wchar_sub_key, string_value_name.c_str(), CStringW_read_value);
-	if (status != ERROR_SUCCESS)
-	{
-		char* message = NULL;
-		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&message, 0, NULL);
-
-		std::cout << "Write fail error_code[" << status << "], message[" << message << "]" << std::endl;
-
-		LocalFree(message);
-	}
-	else
-	{
-		printf("읽기 결과 (CStringW)[%ls]\n", CStringW_read_value.GetString());
-	}
-
 	DWORD dword_read_value;
-	status = registry.Read(HKEY_CURRENT_USER, wchar_sub_key, dword_value_name, &dword_read_value);
+	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, &dword_read_value);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -158,9 +112,11 @@ int main()
 		std::cout << "읽기 결과 (DWORD)[" << dword_read_value << "]" << std::endl;
 	}
 
-	status = registry.Delete(HKEY_CURRENT_USER, wchar_sub_key, dword_value_name);
+	status = registry.Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
 
-	status = registry.Delete(HKEY_CURRENT_USER, wchar_sub_key);
+	status = registry.Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
+
+	status = registry.Delete(HKEY_CURRENT_USER, TEST_SUB_KEY);
 
 	return EXIT_SUCCESS;
 }
