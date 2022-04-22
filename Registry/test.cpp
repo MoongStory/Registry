@@ -13,9 +13,7 @@ int main()
 	const char* const TEST_DATA_DEFAULT = "char data default";
 	const char* const TEST_DATA = "char data";
 
-	MOONG::REGISTRY::Registry registry;
-
-	LSTATUS status = registry.Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
+	LSTATUS status = MOONG::REGISTRY::Registry::Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -26,7 +24,7 @@ int main()
 		LocalFree(message);
 	}
 
-	status = registry.Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, TEST_DATA);
+	status = MOONG::REGISTRY::Registry::Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, TEST_DATA);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -37,7 +35,7 @@ int main()
 		LocalFree(message);
 	}
 
-	status = registry.Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, TEST_DWORD_DATA);
+	status = MOONG::REGISTRY::Registry::Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, TEST_DWORD_DATA);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -49,7 +47,7 @@ int main()
 	}
 
 	char char_read_value[1024] = { 0 };
-	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, char_read_value, _countof(char_read_value));
+	status = MOONG::REGISTRY::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, char_read_value, _countof(char_read_value));
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -65,7 +63,7 @@ int main()
 	}
 
 	wchar_t wchar_read_value[1024] = { 0 };
-	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, wchar_read_value, _countof(wchar_read_value));
+	status = MOONG::REGISTRY::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, wchar_read_value, _countof(wchar_read_value));
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -81,7 +79,7 @@ int main()
 	}
 
 	std::string string_read_value;
-	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, string_read_value);
+	status = MOONG::REGISTRY::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, string_read_value);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -97,7 +95,7 @@ int main()
 	}
 
 	DWORD dword_read_value;
-	status = registry.Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, &dword_read_value);
+	status = MOONG::REGISTRY::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, &dword_read_value);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -112,11 +110,11 @@ int main()
 		std::cout << "읽기 결과 (DWORD)[" << dword_read_value << "]" << std::endl;
 	}
 
-	status = registry.Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
+	status = MOONG::REGISTRY::Registry::Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
 
-	status = registry.Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
+	status = MOONG::REGISTRY::Registry::Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
 
-	status = registry.Delete(HKEY_CURRENT_USER, TEST_SUB_KEY);
+	status = MOONG::REGISTRY::Registry::Delete(HKEY_CURRENT_USER, TEST_SUB_KEY);
 
 	return EXIT_SUCCESS;
 }

@@ -2,16 +2,7 @@
 
 #include <strsafe.h>
 
-MOONG::REGISTRY::Registry::Registry() :
-TOTALBYTES(8192),
-BYTEINCREMENT(4096)
-{
-
-}
-
-
-
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data) const
+LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data)
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -39,7 +30,7 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_k
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const DWORD data) const
+LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const DWORD data)
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -67,7 +58,7 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_k
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, char* const output, const unsigned int output_length) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, char* const output, const unsigned int output_length)
 {
 	HKEY key_result = nullptr;
 
@@ -77,7 +68,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 		return status;
 	}
 
-	DWORD buffer_size = this->TOTALBYTES;
+	DWORD buffer_size = MOONG::REGISTRY::Registry::TOTALBYTES;
 	char* buffer = (char*)malloc(buffer_size);
 	char* buffer_temp = nullptr;
 	DWORD cb_data = buffer_size;
@@ -86,7 +77,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	while (status == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
-		buffer_size += this->BYTEINCREMENT;
+		buffer_size += MOONG::REGISTRY::Registry::BYTEINCREMENT;
 		buffer_temp = buffer;
 		buffer = (char*)realloc(buffer, buffer_size);
 		if (buffer == nullptr)
@@ -95,7 +86,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 
 			RegCloseKey(key_result);
 
-			return MOONG::REGISTRY::RETURN_CODE::ERROR_REALLOC;
+			return MOONG::REGISTRY::RETURN::FAILURE::REALLOC;
 		}
 
 		cb_data = buffer_size;
@@ -126,11 +117,11 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, wchar_t* const output, const unsigned int output_length) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, wchar_t* const output, const unsigned int output_length)
 {
 	char* buffer = new char[output_length];
 
-	LSTATUS status = this->Read(key, sub_key, value_name, buffer, output_length);
+	LSTATUS status = MOONG::REGISTRY::Registry::Read(key, sub_key, value_name, buffer, output_length);
 	if (status != ERROR_SUCCESS)
 	{
 		delete[] buffer;
@@ -146,7 +137,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, std::string& output) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, std::string& output)
 {
 	HKEY key_result = nullptr;
 
@@ -156,7 +147,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 		return status;
 	}
 
-	DWORD buffer_size = this->TOTALBYTES;
+	DWORD buffer_size = MOONG::REGISTRY::Registry::TOTALBYTES;
 	char* buffer = (char*)malloc(buffer_size);
 	char* buffer_temp = nullptr;
 	DWORD cb_data = buffer_size;
@@ -165,7 +156,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	while (status == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
-		buffer_size += this->BYTEINCREMENT;
+		buffer_size += MOONG::REGISTRY::Registry::BYTEINCREMENT;
 		buffer_temp = buffer;
 		buffer = (char*)realloc(buffer, buffer_size);
 		if (buffer == nullptr)
@@ -174,7 +165,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 
 			RegCloseKey(key_result);
 
-			return MOONG::REGISTRY::RETURN_CODE::ERROR_REALLOC;
+			return MOONG::REGISTRY::RETURN::FAILURE::REALLOC;
 		}
 
 		cb_data = buffer_size;
@@ -200,7 +191,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, DWORD* output) const
+LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, DWORD* output)
 {
 	HKEY key_result = nullptr;
 
@@ -228,7 +219,7 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_key, const std::string value_name) const
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_key, const std::string value_name)
 {
 	HKEY key_result = nullptr;
 
@@ -245,7 +236,7 @@ LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_key) const
+LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_key)
 {
 	LSTATUS status = RegDeleteKeyExA(key, sub_key.c_str(), KEY_ALL_ACCESS, 0);
 

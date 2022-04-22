@@ -14,29 +14,29 @@ namespace MOONG
 {
 	namespace REGISTRY
 	{
-		namespace RETURN_CODE
+		namespace RETURN
 		{
-			enum RETURN_CODE
+			const int SUCCESS = 0;
+
+			enum FAILURE
 			{
-				ERROR_REALLOC = 1
+				REALLOC = 1
 			};
 		}
 
 		class Registry
 		{
 		public:
-			Registry();
+			static LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data);
+			static LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value_name, const DWORD data);
 
-			LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data) const;
-			LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value_name, const DWORD data) const;
+			static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, char* const output, const unsigned int output_length);
+			static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, wchar_t* const output, const unsigned int output_length);
+			static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, std::string& output);
+			static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, DWORD* output);
 
-			LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, char* const output, const unsigned int output_length) const;
-			LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, wchar_t* const output, const unsigned int output_length) const;
-			LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, std::string& output) const;
-			LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value_name, DWORD* output) const;
-
-			LSTATUS Delete(const HKEY key, const std::string sub_key, const std::string value_name) const;
-			LSTATUS Delete(const HKEY key, const std::string sub_key) const;
+			static LSTATUS Delete(const HKEY key, const std::string sub_key, const std::string value_name);
+			static LSTATUS Delete(const HKEY key, const std::string sub_key);
 
 
 
@@ -49,8 +49,8 @@ namespace MOONG
 			//int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD& value);					// 예제용으로 남겨놓기.
 
 		private:
-			const unsigned int TOTALBYTES;
-			const unsigned int BYTEINCREMENT;
+			static const unsigned int TOTALBYTES = 8192;
+			static const unsigned int BYTEINCREMENT = 4096;
 		};
 	}
 }
