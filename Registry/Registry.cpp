@@ -2,6 +2,9 @@
 
 #include <strsafe.h>
 
+const unsigned int MOONG::REGISTRY::Registry::TOTALBYTES = 8192;
+const unsigned int MOONG::REGISTRY::Registry::BYTEINCREMENT = 4096;
+
 LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data)
 {
 	HKEY key_result = NULL;

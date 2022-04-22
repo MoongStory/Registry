@@ -49,8 +49,8 @@ namespace MOONG
 			//int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD& value);					// 예제용으로 남겨놓기.
 
 		private:
-			static const unsigned int TOTALBYTES = 8192;
-			static const unsigned int BYTEINCREMENT = 4096;
+			static const unsigned int TOTALBYTES;
+			static const unsigned int BYTEINCREMENT;
 		};
 	}
 }
