@@ -20,10 +20,7 @@ namespace MOONG
 
 			namespace FAILURE
 			{
-				enum FAILURE
-				{
-					REALLOC = 1
-				};
+				static const int REALLOC = 1;
 			}
 		}
 
