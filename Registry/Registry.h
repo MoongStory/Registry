@@ -16,12 +16,15 @@ namespace MOONG
 	{
 		namespace RETURN
 		{
-			const int SUCCESS = 0;
+			static const int SUCCESS = 0;
 
-			enum FAILURE
+			namespace FAILURE
 			{
-				REALLOC = 1
-			};
+				enum FAILURE
+				{
+					REALLOC = 1
+				};
+			}
 		}
 
 		class Registry
