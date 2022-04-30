@@ -2,10 +2,10 @@
 
 #include <strsafe.h>
 
-const unsigned int MOONG::REGISTRY::Registry::TOTALBYTES = 8192;
-const unsigned int MOONG::REGISTRY::Registry::BYTEINCREMENT = 4096;
+const unsigned int MOONG::Registry::TOTALBYTES = 8192;
+const unsigned int MOONG::Registry::BYTEINCREMENT = 4096;
 
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data)
+LSTATUS MOONG::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data)
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -33,7 +33,7 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_k
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const DWORD data)
+LSTATUS MOONG::Registry::Write(const HKEY key, const std::string sub_key, const std::string value_name, const DWORD data)
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -61,9 +61,9 @@ LSTATUS MOONG::REGISTRY::Registry::Write(const HKEY key, const std::string sub_k
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, char* const output, const unsigned int output_length)
+LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, char* const output, const unsigned int output_length)
 {
-	HKEY key_result = nullptr;
+	HKEY key_result = NULL;
 
 	LSTATUS status = RegOpenKeyExA(key, sub_key.c_str(), 0, KEY_READ, &key_result);
 	if (status != ERROR_SUCCESS)
@@ -71,19 +71,19 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 		return status;
 	}
 
-	DWORD buffer_size = MOONG::REGISTRY::Registry::TOTALBYTES;
+	DWORD buffer_size = MOONG::Registry::TOTALBYTES;
 	char* buffer = (char*)malloc(buffer_size);
-	char* buffer_temp = nullptr;
+	char* buffer_temp = NULL;
 	DWORD cb_data = buffer_size;
 
 	status = RegQueryValueExA(key_result, value_name.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
 	while (status == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
-		buffer_size += MOONG::REGISTRY::Registry::BYTEINCREMENT;
+		buffer_size += MOONG::Registry::BYTEINCREMENT;
 		buffer_temp = buffer;
 		buffer = (char*)realloc(buffer, buffer_size);
-		if (buffer == nullptr)
+		if (buffer == NULL)
 		{
 			free(buffer_temp);
 
@@ -104,13 +104,13 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 
 	if (status == ERROR_SUCCESS)
 	{
-		if (buffer != nullptr)
+		if (buffer != NULL)
 		{
 			StringCchCopyA(output, output_length, buffer);
 		}
 	}
 
-	if (buffer != nullptr)
+	if (buffer != NULL)
 	{
 		free(buffer);
 	}
@@ -120,11 +120,11 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, wchar_t* const output, const unsigned int output_length)
+LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, wchar_t* const output, const unsigned int output_length)
 {
 	char* buffer = new char[output_length];
 
-	LSTATUS status = MOONG::REGISTRY::Registry::Read(key, sub_key, value_name, buffer, output_length);
+	LSTATUS status = MOONG::Registry::Read(key, sub_key, value_name, buffer, output_length);
 	if (status != ERROR_SUCCESS)
 	{
 		delete[] buffer;
@@ -132,17 +132,21 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 		return status;
 	}
 
+#if _MSC_VER > 1200
 	size_t convertedChars = 0;
 	mbstowcs_s(&convertedChars, output, output_length, buffer, _TRUNCATE);
+#else
+	mbstowcs(output, buffer, output_length);
+#endif
 
 	delete[] buffer;
 
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, std::string& output)
+LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, std::string& output)
 {
-	HKEY key_result = nullptr;
+	HKEY key_result = NULL;
 
 	LSTATUS status = RegOpenKeyExA(key, sub_key.c_str(), 0, KEY_READ, &key_result);
 	if (status != ERROR_SUCCESS)
@@ -150,19 +154,19 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 		return status;
 	}
 
-	DWORD buffer_size = MOONG::REGISTRY::Registry::TOTALBYTES;
+	DWORD buffer_size = MOONG::Registry::TOTALBYTES;
 	char* buffer = (char*)malloc(buffer_size);
-	char* buffer_temp = nullptr;
+	char* buffer_temp = NULL;
 	DWORD cb_data = buffer_size;
 
 	status = RegQueryValueExA(key_result, value_name.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
 	while (status == ERROR_MORE_DATA)
 	{
 		// Get a buffer that is big enough.
-		buffer_size += MOONG::REGISTRY::Registry::BYTEINCREMENT;
+		buffer_size += MOONG::Registry::BYTEINCREMENT;
 		buffer_temp = buffer;
 		buffer = (char*)realloc(buffer, buffer_size);
-		if (buffer == nullptr)
+		if (buffer == NULL)
 		{
 			free(buffer_temp);
 
@@ -178,13 +182,13 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 
 	if (status == ERROR_SUCCESS)
 	{
-		if (buffer != nullptr)
+		if (buffer != NULL)
 		{
 			output = buffer;
 		}
 	}
 
-	if (buffer != nullptr)
+	if (buffer != NULL)
 	{
 		free(buffer);
 	}
@@ -194,9 +198,9 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, DWORD* output)
+LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value_name, DWORD* output)
 {
-	HKEY key_result = nullptr;
+	HKEY key_result = NULL;
 
 	LSTATUS status = RegOpenKeyExA(key, sub_key.c_str(), 0, KEY_READ, &key_result);
 	if (status != ERROR_SUCCESS)
@@ -222,9 +226,9 @@ LSTATUS MOONG::REGISTRY::Registry::Read(const HKEY key, const std::string sub_ke
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_key, const std::string value_name)
+LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key, const std::string value_name)
 {
-	HKEY key_result = nullptr;
+	HKEY key_result = NULL;
 
 	LSTATUS status = RegOpenKeyExA(key, sub_key.c_str(), 0, KEY_ALL_ACCESS, &key_result);
 	if (status != ERROR_SUCCESS)
@@ -239,9 +243,13 @@ LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_
 	return status;
 }
 
-LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_key)
+LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key)
 {
+#if _MSC_VER > 1200
 	LSTATUS status = RegDeleteKeyExA(key, sub_key.c_str(), KEY_ALL_ACCESS, 0);
+#else
+	LSTATUS status = RegDeleteKeyA(key, sub_key.c_str());
+#endif
 
 	return status;
 }
@@ -249,7 +257,7 @@ LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_
 
 
 
-//int MOONG::REGISTRY::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPCTSTR value)
+//int MOONG::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPCTSTR value)
 //{
 //	CRegKey reg_key;
 //
@@ -271,7 +279,7 @@ LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_
 //	return EXIT_SUCCESS;
 //}
 //
-//int MOONG::REGISTRY::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD value)
+//int MOONG::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD value)
 //{
 //	CRegKey reg_key;
 //
@@ -295,7 +303,7 @@ LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_
 //
 //
 //
-//int MOONG::REGISTRY::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPTSTR value, ULONG* chars)
+//int MOONG::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPTSTR value, ULONG* chars)
 //{
 //	CRegKey reg_key;
 //
@@ -317,7 +325,7 @@ LSTATUS MOONG::REGISTRY::Registry::Delete(const HKEY key, const std::string sub_
 //	return EXIT_SUCCESS;
 //}
 //
-//int MOONG::REGISTRY::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD& value)
+//int MOONG::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD& value)
 //{
 //	CRegKey reg_key;
 //
