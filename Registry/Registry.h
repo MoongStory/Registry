@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <atlbase.h>
-#include <list>
+#include <vector>
 
 #if _MSC_VER <= 1200
 typedef LONG LSTATUS;
@@ -44,7 +44,7 @@ namespace MOONG
 		static LSTATUS Delete(const HKEY key, const std::string sub_key, const std::string value_name);
 		static LSTATUS Delete(const HKEY key, const std::string sub_key);
 
-		static const int getRegSubKeys(const HKEY hKey, const std::string subKey, std::list<std::string>& subKeys);
+		static const int getRegSubKeys(const HKEY hKey, const std::string subKey, std::vector<std::string>& subKeys);
 
 
 		

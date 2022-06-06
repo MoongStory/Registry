@@ -254,7 +254,7 @@ LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key)
 	return status;
 }
 
-const int MOONG::Registry::getRegSubKeys(const HKEY hKey, const std::string subKey, std::list<std::string>& subKeys)
+const int MOONG::Registry::getRegSubKeys(const HKEY hKey, const std::string subKey, std::vector<std::string>& subKeys)
 {
 	HKEY hkResult = NULL;
 	LONG lStatus = 0;
