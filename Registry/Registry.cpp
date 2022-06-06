@@ -254,6 +254,48 @@ LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key)
 	return status;
 }
 
+const int MOONG::Registry::getRegSubKeys(const HKEY hKey, const std::string subKey, std::list<std::string>& subKeys)
+{
+	HKEY hkResult = NULL;
+	LONG lStatus = 0;
+	DWORD dwIndex = 0;
+	std::string szKeyName;
+	DWORD cbName = MAX_PATH;
+	int returnValue = EXIT_FAILURE;
+
+	if (RegOpenKeyExA(hKey, subKey.c_str(), 0, KEY_READ, &hkResult) != ERROR_SUCCESS)
+	{
+		returnValue = EXIT_FAILURE;
+	}
+	else
+	{
+		while ((lStatus = RegEnumKeyExA(hkResult,
+			dwIndex,
+			(LPSTR)(szKeyName.c_str()),
+			&cbName,
+			NULL,
+			NULL,
+			NULL,
+			NULL)) != ERROR_NO_MORE_ITEMS)
+		{
+			if (lStatus == ERROR_SUCCESS)
+			{
+				HKEY hItem = NULL;
+				subKeys.push_back(szKeyName.c_str());
+
+				returnValue = EXIT_SUCCESS;
+			}
+
+			dwIndex++;
+			cbName = MAX_PATH;
+		}
+
+		RegCloseKey(hkResult);
+	}
+
+	return returnValue;
+}
+
 
 
 
