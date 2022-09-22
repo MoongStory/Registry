@@ -1,5 +1,7 @@
 #include "Registry.h"
 
+#include "../../ConvertString/ConvertString/ConvertString.h"
+
 #include <strsafe.h>
 
 const unsigned int MOONG::Registry::TOTALBYTES = 8192;
@@ -132,12 +134,7 @@ LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const s
 		return status;
 	}
 
-#if _MSC_VER > 1200
-	size_t convertedChars = 0;
-	mbstowcs_s(&convertedChars, output, output_length, buffer, _TRUNCATE);
-#else
-	mbstowcs(output, buffer, output_length);
-#endif
+	StringCchCopyW(output, output_length, MOONG::ConvertString::string_to_wstring(buffer).c_str());
 
 	delete[] buffer;
 
