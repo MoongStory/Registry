@@ -33,6 +33,12 @@ namespace MOONG
 	class Registry
 	{
 	public:
+	protected:
+	private:
+		static const unsigned int TOTALBYTES;
+		static const unsigned int BYTEINCREMENT;
+
+	public:
 		static LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value_name, const std::string data);
 		static LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value_name, const DWORD data);
 		
@@ -57,10 +63,8 @@ namespace MOONG
 		////		4번째 파라미터인 value가 가리키는 버퍼의 크기 (tchars)입니다. 메서드가 반환 될 때 chars는 null 종결 문자를 포함하여 검색 된 문자열의 크기(tchars)를 포함합니다.
 		//int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPTSTR value, ULONG* chars);	// 예제용으로 남겨놓기.
 		//int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, DWORD& value);					// 예제용으로 남겨놓기.
-		
+	protected:
 	private:
-		static const unsigned int TOTALBYTES;
-		static const unsigned int BYTEINCREMENT;
 	};
 }
 
