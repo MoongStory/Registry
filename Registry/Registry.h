@@ -66,9 +66,9 @@ namespace MOONG
 		static LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value, const std::string data);
 		static LSTATUS Write(const HKEY key, const std::string sub_key, const std::string value, const DWORD data);
 
-		static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value, char* const output, const unsigned int output_length) noexcept(false);
-		static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value, wchar_t* const output, const unsigned int output_length) noexcept(false);
-		static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value, std::string& output) noexcept(false);
+		static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value, char* const output, const unsigned int output_length);
+		static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value, wchar_t* const output, const unsigned int output_length);
+		static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value, std::string& output);
 		static LSTATUS Read(const HKEY key, const std::string sub_key, const std::string value, DWORD* output);
 
 		static LSTATUS Delete(const HKEY key, const std::string sub_key, const std::string value);

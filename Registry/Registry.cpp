@@ -64,7 +64,7 @@ LSTATUS MOONG::Registry::Write(const HKEY key, const std::string sub_key, const 
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, char* const output, const unsigned int output_length) noexcept(false)
+LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, char* const output, const unsigned int output_length)
 {
 
 	try
@@ -131,7 +131,7 @@ LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const s
 	}
 }
 
-LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, wchar_t* const output, const unsigned int output_length) noexcept(false)
+LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, wchar_t* const output, const unsigned int output_length)
 {
 	try
 	{
@@ -157,7 +157,7 @@ LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const s
 	}
 }
 
-LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, std::string& output) noexcept(false)
+LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, std::string& output)
 {
 	try
 	{
