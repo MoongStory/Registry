@@ -246,7 +246,7 @@ LSTATUS MOONG::Registry::read(const HKEY key, const std::string sub_key, const s
 	return status;
 }
 
-LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key, const std::string value)
+LSTATUS MOONG::Registry::remove(const HKEY key, const std::string sub_key, const std::string value)
 {
 	HKEY key_result = NULL;
 
@@ -263,7 +263,7 @@ LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key, const
 	return status;
 }
 
-LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key)
+LSTATUS MOONG::Registry::remove(const HKEY key, const std::string sub_key)
 {
 #if _MSC_VER > 1200
 	LSTATUS status = RegDeleteKeyExA(key, sub_key.c_str(), KEY_ALL_ACCESS, 0);

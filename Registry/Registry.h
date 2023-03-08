@@ -71,8 +71,8 @@ namespace MOONG
 		static LSTATUS read(const HKEY key, const std::string sub_key, const std::string value, std::string& output);
 		static LSTATUS read(const HKEY key, const std::string sub_key, const std::string value, DWORD* output);
 
-		static LSTATUS Delete(const HKEY key, const std::string sub_key, const std::string value);
-		static LSTATUS Delete(const HKEY key, const std::string sub_key);
+		static LSTATUS remove(const HKEY key, const std::string sub_key, const std::string value);
+		static LSTATUS remove(const HKEY key, const std::string sub_key);
 
 		static const int get_reg_sub_keys(const HKEY hKey, const std::string subKey, std::vector<std::string>& subKeys);
 

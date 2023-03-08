@@ -110,11 +110,11 @@ int main()
 		std::cout << "읽기 결과 (DWORD)[" << dword_read_value << "]" << std::endl;
 	}
 
-	status = MOONG::Registry::Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
+	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
 
-	status = MOONG::Registry::Delete(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
+	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
 
-	status = MOONG::Registry::Delete(HKEY_CURRENT_USER, TEST_SUB_KEY);
+	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY);
 
 	return EXIT_SUCCESS;
 }
