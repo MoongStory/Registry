@@ -13,7 +13,7 @@ int main()
 	const char* const TEST_DATA_DEFAULT = "char data default";
 	const char* const TEST_DATA = "char data";
 
-	LSTATUS status = MOONG::Registry::Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
+	LSTATUS status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -24,7 +24,7 @@ int main()
 		LocalFree(message);
 	}
 
-	status = MOONG::Registry::Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, TEST_DATA);
+	status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, TEST_DATA);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -35,7 +35,7 @@ int main()
 		LocalFree(message);
 	}
 
-	status = MOONG::Registry::Write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, TEST_DWORD_DATA);
+	status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, TEST_DWORD_DATA);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -47,7 +47,7 @@ int main()
 	}
 
 	char char_read_value[1024] = { 0 };
-	status = MOONG::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, char_read_value, _countof(char_read_value));
+	status = MOONG::Registry::read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, char_read_value, _countof(char_read_value));
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -63,7 +63,7 @@ int main()
 	}
 
 	wchar_t wchar_read_value[1024] = { 0 };
-	status = MOONG::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, wchar_read_value, _countof(wchar_read_value));
+	status = MOONG::Registry::read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, wchar_read_value, _countof(wchar_read_value));
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -79,7 +79,7 @@ int main()
 	}
 
 	std::string string_read_value;
-	status = MOONG::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, string_read_value);
+	status = MOONG::Registry::read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, string_read_value);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -95,7 +95,7 @@ int main()
 	}
 
 	DWORD dword_read_value;
-	status = MOONG::Registry::Read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, &dword_read_value);
+	status = MOONG::Registry::read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, &dword_read_value);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;

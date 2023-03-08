@@ -8,7 +8,7 @@
 const unsigned int MOONG::Registry::TOTALBYTES = 8192;
 const unsigned int MOONG::Registry::BYTEINCREMENT = 4096;
 
-LSTATUS MOONG::Registry::Write(const HKEY key, const std::string sub_key, const std::string value, const std::string data)
+LSTATUS MOONG::Registry::write(const HKEY key, const std::string sub_key, const std::string value, const std::string data)
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -36,7 +36,7 @@ LSTATUS MOONG::Registry::Write(const HKEY key, const std::string sub_key, const 
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::Registry::Write(const HKEY key, const std::string sub_key, const std::string value, const DWORD data)
+LSTATUS MOONG::Registry::write(const HKEY key, const std::string sub_key, const std::string value, const DWORD data)
 {
 	HKEY key_result = NULL;
 	DWORD disposition = 0;
@@ -64,7 +64,7 @@ LSTATUS MOONG::Registry::Write(const HKEY key, const std::string sub_key, const 
 	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, char* const output, const unsigned int output_length)
+LSTATUS MOONG::Registry::read(const HKEY key, const std::string sub_key, const std::string value, char* const output, const unsigned int output_length)
 {
 
 	try
@@ -131,13 +131,13 @@ LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const s
 	}
 }
 
-LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, wchar_t* const output, const unsigned int output_length)
+LSTATUS MOONG::Registry::read(const HKEY key, const std::string sub_key, const std::string value, wchar_t* const output, const unsigned int output_length)
 {
 	try
 	{
 		char* buffer = new char[output_length];
 
-		LSTATUS status = MOONG::Registry::Read(key, sub_key, value, buffer, output_length);
+		LSTATUS status = MOONG::Registry::read(key, sub_key, value, buffer, output_length);
 		if (status != ERROR_SUCCESS)
 		{
 			delete[] buffer;
@@ -157,7 +157,7 @@ LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const s
 	}
 }
 
-LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, std::string& output)
+LSTATUS MOONG::Registry::read(const HKEY key, const std::string sub_key, const std::string value, std::string& output)
 {
 	try
 	{
@@ -218,7 +218,7 @@ LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const s
 	}
 }
 
-LSTATUS MOONG::Registry::Read(const HKEY key, const std::string sub_key, const std::string value, DWORD* output)
+LSTATUS MOONG::Registry::read(const HKEY key, const std::string sub_key, const std::string value, DWORD* output)
 {
 	HKEY key_result = NULL;
 
@@ -274,7 +274,7 @@ LSTATUS MOONG::Registry::Delete(const HKEY key, const std::string sub_key)
 	return status;
 }
 
-const int MOONG::Registry::getRegSubKeys(const HKEY hKey, const std::string subKey, std::vector<std::string>& subKeys)
+const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const std::string subKey, std::vector<std::string>& subKeys)
 {
 	HKEY hkResult = NULL;
 	LONG lStatus = 0;
