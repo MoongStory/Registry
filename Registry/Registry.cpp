@@ -1,6 +1,5 @@
 #include "Registry.h"
 
-// https://github.com/MoongStory/ConvertDataType
 #include "../../ConvertDataType/ConvertDataType/ConvertDataType.h"
 
 #include <strsafe.h>
