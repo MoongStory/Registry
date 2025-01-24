@@ -80,7 +80,7 @@ namespace MOONG
 
 
 
-		//int Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value, LPCTSTR value);				// 예제용으로 남겨놓기.
+		//int Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPCTSTR value);				// 예제용으로 남겨놓기.
 		//int Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value, DWORD value);					// 예제용으로 남겨놓기.
 
 		//// ULONG* chars 설명.

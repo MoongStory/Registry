@@ -329,28 +329,28 @@ TODO: 아래 Write, Read 함수 아래 MSC_VER이나 C언어 표준으로 분기 처리해서 추가.
 #endif
 */
 
-//int MOONG::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value, LPCTSTR value)
+//int MOONG::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value_name, LPCTSTR value)
 //{
 //	CRegKey reg_key;
 //
 //	if (reg_key.Create(key_root, key_name) != ERROR_SUCCESS)
 //	{
-//		MOONG::REGISTRY::RETURN_CODE::ERROR_CREATE;
+//		//MOONG::REGISTRY::RETURN_CODE::ERROR_CREATE;
 //	}
 //
-//	if (reg_key.SetStringValue(value, value) != ERROR_SUCCESS)
+//	if (reg_key.SetStringValue(value_name, value, REG_SZ) != ERROR_SUCCESS)
 //	{
-//		MOONG::REGISTRY::RETURN_CODE::ERROR_SET_VALUE;
+//		//MOONG::REGISTRY::RETURN_CODE::ERROR_SET_VALUE;
 //	}
 //
 //	if (reg_key.Close() != ERROR_SUCCESS)
 //	{
-//		MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+//		//MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
 //	}
 //
 //	return EXIT_SUCCESS;
 //}
-//
+
 //int MOONG::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value, DWORD value)
 //{
 //	CRegKey reg_key;

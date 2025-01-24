@@ -8,12 +8,36 @@ int main()
 	const char* const TEST_DWORD_VALUE_NAME = "dword value name";
 
 	const char* const TEST_SUB_KEY = "SOFTWARE\\111_char_test";
+	const char* const TEST_SUB_KEY_0 = "SOFTWARE\\111_char_test\\000";
+	const char* const TEST_SUB_KEY_1 = "SOFTWARE\\111_char_test\\111";
 	const char* const TEST_VALUE_NAME_DEFAULT = "";
 	const char* const TEST_VALUE_NAME = "char value name";
 	const char* const TEST_DATA_DEFAULT = "char data default";
 	const char* const TEST_DATA = "char data";
 
 	LSTATUS status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
+	if (status != ERROR_SUCCESS)
+	{
+		char* message = NULL;
+		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&message, 0, NULL);
+
+		std::cout << "Write fail error_code[" << status << "], message[" << message << "]" << std::endl;
+
+		LocalFree(message);
+	}
+
+	status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY_0, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
+	if (status != ERROR_SUCCESS)
+	{
+		char* message = NULL;
+		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&message, 0, NULL);
+
+		std::cout << "Write fail error_code[" << status << "], message[" << message << "]" << std::endl;
+
+		LocalFree(message);
+	}
+	
+	status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY_1, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -110,18 +134,24 @@ int main()
 		std::cout << "읽기 결과 (DWORD)[" << dword_read_value << "]" << std::endl;
 	}
 
+	std::vector<std::string> sub_keys;
+	MOONG::Registry::get_reg_sub_keys(HKEY_CURRENT_USER, TEST_SUB_KEY, sub_keys);
+	for (auto i : sub_keys)
+	{
+		std::cout << "get_reg_sub_keys[" << i << "]" << std::endl;
+	}
+
 	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
+
+	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME);
 
 	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
 
-	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY);
+	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY_0);
 
-	std::vector<std::string> sub_keys;
-	MOONG::Registry::get_reg_sub_keys(HKEY_LOCAL_MACHINE, TEST_SUB_KEY, sub_keys);
-	for (auto i : sub_keys)
-	{
-		std::cout << i << std::endl;
-	}
+	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY_1);
+
+	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY);
 
 	return EXIT_SUCCESS;
 }
