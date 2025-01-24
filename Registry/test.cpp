@@ -116,5 +116,12 @@ int main()
 
 	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY);
 
+	std::vector<std::string> sub_keys;
+	MOONG::Registry::get_reg_sub_keys(HKEY_LOCAL_MACHINE, TEST_SUB_KEY, sub_keys);
+	for (auto i : sub_keys)
+	{
+		std::cout << i << std::endl;
+	}
+
 	return EXIT_SUCCESS;
 }

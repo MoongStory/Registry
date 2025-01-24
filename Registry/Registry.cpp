@@ -278,7 +278,7 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const std::string s
 	HKEY hkResult = NULL;
 	LONG lStatus = 0;
 	DWORD dwIndex = 0;
-	std::string szKeyName;
+	CHAR szKeyName[MAX_PATH] = { 0 };
 	DWORD cbName = MAX_PATH;
 	int returnValue = EXIT_FAILURE;
 
@@ -290,7 +290,7 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const std::string s
 	{
 		while ((lStatus = RegEnumKeyExA(hkResult,
 			dwIndex,
-			(LPSTR)(szKeyName.c_str()),
+			szKeyName,
 			&cbName,
 			NULL,
 			NULL,
@@ -300,7 +300,10 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const std::string s
 			if (lStatus == ERROR_SUCCESS)
 			{
 				HKEY hItem = NULL;
-				subKeys.push_back(szKeyName.c_str());
+
+				subKeys.push_back(szKeyName);
+
+				ZeroMemory(szKeyName, sizeof(szKeyName));
 
 				returnValue = EXIT_SUCCESS;
 			}
@@ -315,8 +318,16 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const std::string s
 	return returnValue;
 }
 
+// TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로???
 
 
+
+/*
+TODO: 아래 Write, Read 함수 아래 MSC_VER이나 C언어 표준으로 분기 처리해서 추가.
+#if _MSC_VER > 1000
+#pragma once
+#endif
+*/
 
 //int MOONG::Registry::Write(HKEY key_root, LPCTSTR key_name, LPCTSTR value, LPCTSTR value)
 //{
