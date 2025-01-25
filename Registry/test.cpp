@@ -70,6 +70,22 @@ int main()
 		LocalFree(message);
 	}
 
+	TCHAR char_read_value_default[1024] = { 0 };
+	status = MOONG::Registry::read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT, char_read_value_default, _countof(char_read_value_default));
+	if (status != ERROR_SUCCESS)
+	{
+		char* message = NULL;
+		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&message, 0, NULL);
+
+		std::cout << "Write fail error_code[" << status << "], message[" << message << "]" << std::endl;
+
+		LocalFree(message);
+	}
+	else
+	{
+		std::wcout << "읽기 결과 (char)[" << char_read_value_default << "]" << std::endl;
+	}
+
 	TCHAR char_read_value[1024] = { 0 };
 	status = MOONG::Registry::read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME, char_read_value, _countof(char_read_value));
 	if (status != ERROR_SUCCESS)

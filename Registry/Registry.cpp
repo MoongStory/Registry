@@ -7,115 +7,115 @@
 const unsigned int MOONG::Registry::TOTALBYTES = 8192;
 const unsigned int MOONG::Registry::BYTEINCREMENT = 4096;
 
-//LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const MOONG::STRING_TOOL::tstring data)
-//{
-//	HKEY key_result = NULL;
-//	DWORD disposition = 0;
-//
-//	LSTATUS status = RegCreateKeyEx(key, sub_key.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
-//	if (status == ERROR_SUCCESS)
-//	{
-//		status = RegSetValueEx(key_result, value.c_str(), 0, REG_SZ, (const BYTE*)(data.c_str()), (DWORD)data.length());
-//		if (status != ERROR_SUCCESS)
-//		{
-//			RegCloseKey(key_result);
-//
-//			return status;
-//		}
-//	}
-//	else
-//	{
-//		RegCloseKey(key_result);
-//
-//		return status;
-//	}
-//
-//	RegCloseKey(key_result);
-//
-//	return ERROR_SUCCESS;
-//}
-//
-//LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const DWORD data)
-//{
-//	HKEY key_result = NULL;
-//	DWORD disposition = 0;
-//
-//	LSTATUS status = RegCreateKeyEx(key, sub_key.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
-//	if (status == ERROR_SUCCESS)
-//	{
-//		status = RegSetValueEx(key_result, value.c_str(), 0, REG_DWORD, (const BYTE*)(&data), sizeof(data));
-//		if (status != ERROR_SUCCESS)
-//		{
-//			RegCloseKey(key_result);
-//
-//			return status;
-//		}
-//	}
-//	else
-//	{
-//		RegCloseKey(key_result);
-//
-//		return status;
-//	}
-//
-//	RegCloseKey(key_result);
-//
-//	return ERROR_SUCCESS;
-//}
-
-LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::tstring key_name, const MOONG::STRING_TOOL::tstring value_name, const MOONG::STRING_TOOL::tstring value)
+LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const MOONG::STRING_TOOL::tstring data)
 {
-	CRegKey reg_key;
+	HKEY key_result = NULL;
+	DWORD disposition = 0;
 
-	LSTATUS return_status = reg_key.Create(key_root, key_name.c_str());
-	if (return_status != ERROR_SUCCESS)
+	LSTATUS status = RegCreateKeyEx(key, sub_key.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
+	if (status == ERROR_SUCCESS)
 	{
-		return return_status;
+		DWORD cbData = (DWORD)((data.length() + 1) * sizeof(TCHAR));
+		status = RegSetValueEx(key_result, value.c_str(), 0, REG_SZ, (const BYTE*)(data.c_str()), cbData);
+		if (status != ERROR_SUCCESS)
+		{
+			RegCloseKey(key_result);
+
+			return status;
+		}
+	}
+	else
+	{
+		RegCloseKey(key_result);
+
+		return status;
 	}
 
-	return_status = reg_key.SetStringValue(value_name.c_str(), value.c_str(), REG_SZ);
-	if (return_status != ERROR_SUCCESS)
-	{
-		return return_status;
-	}
+	RegCloseKey(key_result);
 
-	return_status = reg_key.Close();
-	if (return_status != ERROR_SUCCESS)
-	{
-		return return_status;
-	}
-
-	return EXIT_SUCCESS;
+	return ERROR_SUCCESS;
 }
 
-LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::tstring key_name, const MOONG::STRING_TOOL::tstring value_name, DWORD value)
+LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const DWORD data)
 {
-	CRegKey reg_key;
+	HKEY key_result = NULL;
+	DWORD disposition = 0;
 
-	LSTATUS return_status = reg_key.Create(key_root, key_name.c_str());
-	if (return_status != ERROR_SUCCESS)
+	LSTATUS status = RegCreateKeyEx(key, sub_key.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
+	if (status == ERROR_SUCCESS)
 	{
-		return return_status;
+		status = RegSetValueEx(key_result, value.c_str(), 0, REG_DWORD, (const BYTE*)(&data), sizeof(data));
+		if (status != ERROR_SUCCESS)
+		{
+			RegCloseKey(key_result);
+
+			return status;
+		}
+	}
+	else
+	{
+		RegCloseKey(key_result);
+
+		return status;
 	}
 
-	return_status = reg_key.SetDWORDValue(value_name.c_str(), value);
-	if (return_status != ERROR_SUCCESS)
-	{
-		return return_status;
-	}
+	RegCloseKey(key_result);
 
-	return_status = reg_key.Close();
-	if (return_status != ERROR_SUCCESS)
-	{
-		return return_status;
-	}
-
-	return EXIT_SUCCESS;
+	return ERROR_SUCCESS;
 }
+
+//LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::tstring key_name, const MOONG::STRING_TOOL::tstring value_name, const MOONG::STRING_TOOL::tstring value)
+//{
+//	CRegKey reg_key;
+//
+//	LSTATUS return_status = reg_key.Create(key_root, key_name.c_str());
+//	if (return_status != ERROR_SUCCESS)
+//	{
+//		return return_status;
+//	}
+//
+//	return_status = reg_key.SetStringValue(value_name.c_str(), value.c_str(), REG_SZ);
+//	if (return_status != ERROR_SUCCESS)
+//	{
+//		return return_status;
+//	}
+//
+//	return_status = reg_key.Close();
+//	if (return_status != ERROR_SUCCESS)
+//	{
+//		return return_status;
+//	}
+//
+//	return EXIT_SUCCESS;
+//}
+//
+//LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::tstring key_name, const MOONG::STRING_TOOL::tstring value_name, DWORD value)
+//{
+//	CRegKey reg_key;
+//
+//	LSTATUS return_status = reg_key.Create(key_root, key_name.c_str());
+//	if (return_status != ERROR_SUCCESS)
+//	{
+//		return return_status;
+//	}
+//
+//	return_status = reg_key.SetDWORDValue(value_name.c_str(), value);
+//	if (return_status != ERROR_SUCCESS)
+//	{
+//		return return_status;
+//	}
+//
+//	return_status = reg_key.Close();
+//	if (return_status != ERROR_SUCCESS)
+//	{
+//		return return_status;
+//	}
+//
+//	return EXIT_SUCCESS;
+//}
 
 LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, TCHAR* const output, const unsigned int output_length)
 {
-
 	try
 	{
 		HKEY key_result = NULL;
