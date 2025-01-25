@@ -1,7 +1,5 @@
 #include "Registry.h"
 
-#include "../../ConvertDataType/ConvertDataType/ConvertDataType.h"
-
 #include <strsafe.h>
 
 const unsigned int MOONG::Registry::TOTALBYTES = 8192;
@@ -9,31 +7,33 @@ const unsigned int MOONG::Registry::BYTEINCREMENT = 4096;
 
 LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const MOONG::STRING_TOOL::tstring data)
 {
-	HKEY key_result = NULL;
-	DWORD disposition = 0;
-
-	LSTATUS status = RegCreateKeyEx(key, sub_key.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key_result, &disposition);
-	if (status == ERROR_SUCCESS)
-	{
-		DWORD cbData = (DWORD)((data.length() + 1) * sizeof(TCHAR));
-		status = RegSetValueEx(key_result, value.c_str(), 0, REG_SZ, (const BYTE*)(data.c_str()), cbData);
-		if (status != ERROR_SUCCESS)
+#if _MSC_VER > 1200
+		CRegKey reg_key;
+	
+		LSTATUS return_status = reg_key.Create(key, sub_key.c_str());
+		if (return_status != ERROR_SUCCESS)
 		{
-			RegCloseKey(key_result);
-
-			return status;
+			return return_status;
 		}
-	}
-	else
-	{
-		RegCloseKey(key_result);
+	
+		return_status = reg_key.SetStringValue(value.c_str(), data.c_str(), REG_SZ);
+		if (return_status != ERROR_SUCCESS)
+		{
+			return return_status;
+		}
+	
+		return_status = reg_key.Close();
+		if (return_status != ERROR_SUCCESS)
+		{
+			return return_status;
+		}
+	
+		return EXIT_SUCCESS;
+#else
+	LSTATUS status = RegSetKeyValue(key, sub_key.c_str(), value.c_str(), REG_SZ, data.c_str(), (DWORD)((data.length() + 1) * sizeof(TCHAR)));
 
-		return status;
-	}
-
-	RegCloseKey(key_result);
-
-	return ERROR_SUCCESS;
+	return status;
+#endif
 }
 
 LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const DWORD data)
@@ -64,31 +64,6 @@ LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring
 	return ERROR_SUCCESS;
 }
 
-//LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::tstring key_name, const MOONG::STRING_TOOL::tstring value_name, const MOONG::STRING_TOOL::tstring value)
-//{
-//	CRegKey reg_key;
-//
-//	LSTATUS return_status = reg_key.Create(key_root, key_name.c_str());
-//	if (return_status != ERROR_SUCCESS)
-//	{
-//		return return_status;
-//	}
-//
-//	return_status = reg_key.SetStringValue(value_name.c_str(), value.c_str(), REG_SZ);
-//	if (return_status != ERROR_SUCCESS)
-//	{
-//		return return_status;
-//	}
-//
-//	return_status = reg_key.Close();
-//	if (return_status != ERROR_SUCCESS)
-//	{
-//		return return_status;
-//	}
-//
-//	return EXIT_SUCCESS;
-//}
-//
 //LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::tstring key_name, const MOONG::STRING_TOOL::tstring value_name, DWORD value)
 //{
 //	CRegKey reg_key;
