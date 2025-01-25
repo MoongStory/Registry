@@ -67,19 +67,22 @@ LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::ts
 {
 	CRegKey reg_key;
 
-	if (reg_key.Create(key_root, key_name.c_str()) != ERROR_SUCCESS)
+	LSTATUS return_status = reg_key.Create(key_root, key_name.c_str());
+	if (return_status != ERROR_SUCCESS)
 	{
-		//MOONG::REGISTRY::RETURN_CODE::ERROR_CREATE;
+		return return_status;
 	}
 
-	if (reg_key.SetStringValue(value_name.c_str(), value.c_str(), REG_SZ) != ERROR_SUCCESS)
+	return_status = reg_key.SetStringValue(value_name.c_str(), value.c_str(), REG_SZ);
+	if (return_status != ERROR_SUCCESS)
 	{
-		//MOONG::REGISTRY::RETURN_CODE::ERROR_SET_VALUE;
+		return return_status;
 	}
 
-	if (reg_key.Close() != ERROR_SUCCESS)
+	return_status = reg_key.Close();
+	if (return_status != ERROR_SUCCESS)
 	{
-		//MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+		return return_status;
 	}
 
 	return EXIT_SUCCESS;
@@ -89,19 +92,22 @@ LSTATUS MOONG::Registry::write(const HKEY key_root, const MOONG::STRING_TOOL::ts
 {
 	CRegKey reg_key;
 
-	if (reg_key.Create(key_root, key_name.c_str()) != ERROR_SUCCESS)
+	LSTATUS return_status = reg_key.Create(key_root, key_name.c_str());
+	if (return_status != ERROR_SUCCESS)
 	{
-		//MOONG::REGISTRY::RETURN_CODE::ERROR_CREATE;
+		return return_status;
 	}
 
-	if (reg_key.SetDWORDValue(value_name.c_str(), value) != ERROR_SUCCESS)
+	return_status = reg_key.SetDWORDValue(value_name.c_str(), value);
+	if (return_status != ERROR_SUCCESS)
 	{
-		//MOONG::REGISTRY::RETURN_CODE::ERROR_SET_VALUE;
+		return return_status;
 	}
 
-	if (reg_key.Close() != ERROR_SUCCESS)
+	return_status = reg_key.Close();
+	if (return_status != ERROR_SUCCESS)
 	{
-		//MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+		return return_status;
 	}
 
 	return EXIT_SUCCESS;
