@@ -168,7 +168,7 @@ LSTATUS MOONG::Registry::remove(const HKEY key, const MOONG::STRING_TOOL::tstrin
 	return status;
 }
 
-const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring subKey, std::vector<MOONG::STRING_TOOL::tstring>& subKeys)
+const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys)
 {
 	HKEY hkResult = NULL;
 	LONG lStatus = 0;
@@ -177,7 +177,7 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING
 	DWORD cbName = MAX_PATH;
 	int return_value = EXIT_FAILURE;
 
-	if (RegOpenKeyEx(hKey, subKey.c_str(), 0, KEY_READ, &hkResult) != ERROR_SUCCESS)
+	if (RegOpenKeyEx(hKey, sub_key.c_str(), 0, KEY_READ, &hkResult) != ERROR_SUCCESS)
 	{
 		return_value = EXIT_FAILURE;
 	}
@@ -196,7 +196,7 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING
 			{
 				HKEY hItem = NULL;
 
-				subKeys.push_back(szKeyName);
+				output_sub_keys.push_back(szKeyName);
 
 				ZeroMemory(szKeyName, sizeof(szKeyName));
 

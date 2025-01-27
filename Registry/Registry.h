@@ -43,6 +43,8 @@ typedef LONG LSTATUS;
 
 namespace MOONG
 {
+	// TODO: 주석처리 되어있는 read 함수들 통합.
+	// TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로???
 	class Registry
 	{
 	public:
@@ -62,7 +64,7 @@ namespace MOONG
 		static LSTATUS remove(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value);
 		static LSTATUS remove(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key);
 
-		static const int get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring subKey, std::vector<MOONG::STRING_TOOL::tstring>& subKeys);
+		static const int get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys);
 
 
 
@@ -80,6 +82,3 @@ namespace MOONG
 }
 
 #endif _REGISTRY_H_
-
-// TODO: 주석처리 되어있는 read 함수들 통합.
-// TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로???
