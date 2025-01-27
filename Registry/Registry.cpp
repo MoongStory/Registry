@@ -2,8 +2,7 @@
 
 #include <strsafe.h>
 
-const unsigned int MOONG::Registry::TOTAL_BYTES = 8192;
-const unsigned int MOONG::Registry::BYTE_INCREMENT = 4096;
+const unsigned int MOONG::Registry::TOTAL_BYTES = 1024;
 
 LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const MOONG::STRING_TOOL::tstring data)
 {
@@ -67,70 +66,35 @@ LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring
 #endif
 }
 
-LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, TCHAR* const output, const unsigned int output_length)
+LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, TCHAR* const output, const DWORD output_length)
 {
-	try
-	{
-		HKEY key_result = NULL;
+    HKEY key_result = NULL;
 
-		LSTATUS status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_READ, &key_result);
-		if (status != ERROR_SUCCESS)
-		{
-			return status;
-		}
+    LSTATUS return_status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_READ, &key_result);
+    if (return_status != ERROR_SUCCESS)
+    {
+        return return_status;
+    }
 
-		DWORD buffer_size = MOONG::Registry::TOTAL_BYTES;
-		TCHAR* buffer = new TCHAR[buffer_size];
-		TCHAR* buffer_temp = NULL;
-		DWORD cb_data = buffer_size;
+    DWORD dataType = 0;
+    return_status = RegQueryValueEx(key_result, value.c_str(), NULL, &dataType, (LPBYTE)output, (LPDWORD)(&output_length));
+    if (return_status != ERROR_SUCCESS)
+    {
+        RegCloseKey(key_result);
 
-		status = RegQueryValueEx(key_result, value.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
-		while (status == ERROR_MORE_DATA)
-		{
-			// Get a buffer that is big enough.
-			buffer_size += MOONG::Registry::BYTE_INCREMENT;
-			buffer_temp = buffer;
-			buffer = (TCHAR*)realloc(buffer, buffer_size);
-			if (buffer == NULL)
-			{
-				free(buffer_temp);
+        return return_status;
+    }
 
-				RegCloseKey(key_result);
+    if (dataType != REG_SZ)
+    {
+        RegCloseKey(key_result);
 
-				return MOONG::REGISTRY::RETURN::FAILURE::REALLOC;
-			}
+        return ERROR_INVALID_DATA;
+    }
 
-			cb_data = buffer_size;
+    RegCloseKey(key_result);
 
-			status = RegQueryValueEx(key_result,
-				value.c_str(),
-				NULL,
-				NULL,
-				(LPBYTE)buffer,
-				&cb_data);
-		}
-
-		if (status == ERROR_SUCCESS)
-		{
-			if (buffer != NULL)
-			{
-				StringCchCopy(output, output_length, buffer);
-			}
-		}
-
-		if (buffer != NULL)
-		{
-			delete buffer;
-		}
-
-		RegCloseKey(key_result);
-
-		return status;
-	}
-	catch (const std::exception& exception)
-	{
-		throw exception;
-	}
+    return ERROR_SUCCESS;
 }
 
 LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, MOONG::STRING_TOOL::tstring& output)
@@ -148,28 +112,32 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
 {
 	HKEY key_result = NULL;
 
-	LSTATUS status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_READ, &key_result);
-	if (status != ERROR_SUCCESS)
+	LSTATUS return_status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_READ, &key_result);
+	if (return_status != ERROR_SUCCESS)
 	{
-		return status;
+		return return_status;
 	}
 
-	DWORD buffer = 0;
+	DWORD dataType = 0;
 	DWORD cb_data = sizeof(DWORD);
-
-	status = RegQueryValueEx(key_result, value.c_str(), NULL, NULL, (LPBYTE)(&buffer), &cb_data);
-	if (status != ERROR_SUCCESS)
+	return_status = RegQueryValueEx(key_result, value.c_str(), NULL, &dataType, (LPBYTE)output, &cb_data);
+	if (return_status != ERROR_SUCCESS)
 	{
 		RegCloseKey(key_result);
 
-		return status;
+		return return_status;
 	}
 
-	*output = buffer;
+	if (dataType != REG_DWORD)
+	{
+		RegCloseKey(key_result);
+
+		return ERROR_INVALID_DATA;
+	}
 
 	RegCloseKey(key_result);
 
-	return status;
+	return ERROR_SUCCESS;
 }
 
 LSTATUS MOONG::Registry::remove(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value)

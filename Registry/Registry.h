@@ -43,19 +43,6 @@ typedef LONG LSTATUS;
 
 namespace MOONG
 {
-	namespace REGISTRY
-	{
-		namespace RETURN
-		{
-			static const int SUCCESS = 0;
-
-			namespace FAILURE
-			{
-				static const int REALLOC = 1;
-			}
-		}
-	}
-
 	class Registry
 	{
 	public:
@@ -68,7 +55,7 @@ namespace MOONG
 		static LSTATUS write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const MOONG::STRING_TOOL::tstring data);
 		static LSTATUS write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const DWORD data);
 
-		static LSTATUS read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, TCHAR* const output, const unsigned int output_length);
+		static LSTATUS read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, TCHAR* const output, const DWORD output_length);
 		static LSTATUS read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, MOONG::STRING_TOOL::tstring& output);
 		static LSTATUS read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, DWORD* output);
 
