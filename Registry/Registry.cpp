@@ -2,8 +2,8 @@
 
 #include <strsafe.h>
 
-const unsigned int MOONG::Registry::TOTALBYTES = 8192;
-const unsigned int MOONG::Registry::BYTEINCREMENT = 4096;
+const unsigned int MOONG::Registry::TOTAL_BYTES = 8192;
+const unsigned int MOONG::Registry::BYTE_INCREMENT = 4096;
 
 LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const MOONG::STRING_TOOL::tstring data)
 {
@@ -79,7 +79,7 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
 			return status;
 		}
 
-		DWORD buffer_size = MOONG::Registry::TOTALBYTES;
+		DWORD buffer_size = MOONG::Registry::TOTAL_BYTES;
 		TCHAR* buffer = new TCHAR[buffer_size];
 		TCHAR* buffer_temp = NULL;
 		DWORD cb_data = buffer_size;
@@ -88,7 +88,7 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
 		while (status == ERROR_MORE_DATA)
 		{
 			// Get a buffer that is big enough.
-			buffer_size += MOONG::Registry::BYTEINCREMENT;
+			buffer_size += MOONG::Registry::BYTE_INCREMENT;
 			buffer_temp = buffer;
 			buffer = (TCHAR*)realloc(buffer, buffer_size);
 			if (buffer == NULL)
@@ -135,63 +135,13 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
 
 LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, MOONG::STRING_TOOL::tstring& output)
 {
-	try
-	{
-		HKEY key_result = NULL;
+	TCHAR temp[MOONG::Registry::TOTAL_BYTES] = { 0 };
 
-		LSTATUS status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_READ, &key_result);
-		if (status != ERROR_SUCCESS)
-		{
-			return status;
-		}
+	LSTATUS return_value = read(key, sub_key, value, temp, _countof(temp));
 
-		DWORD buffer_size = MOONG::Registry::TOTALBYTES;
-		TCHAR* buffer = new TCHAR[buffer_size];
-		TCHAR* buffer_temp = NULL;
-		DWORD cb_data = buffer_size;
+	output = temp;
 
-		status = RegQueryValueEx(key_result, value.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
-		while (status == ERROR_MORE_DATA)
-		{
-			// Get a buffer that is big enough.
-			buffer_size += MOONG::Registry::BYTEINCREMENT;
-			buffer_temp = buffer;
-			buffer = (TCHAR*)realloc(buffer, buffer_size);
-			if (buffer == NULL)
-			{
-				free(buffer_temp);
-
-				RegCloseKey(key_result);
-
-				return MOONG::REGISTRY::RETURN::FAILURE::REALLOC;
-			}
-
-			cb_data = buffer_size;
-
-			status = RegQueryValueEx(key_result, value.c_str(), NULL, NULL, (LPBYTE)buffer, &cb_data);
-		}
-
-		if (status == ERROR_SUCCESS)
-		{
-			if (buffer != NULL)
-			{
-				output = buffer;
-			}
-		}
-
-		if (buffer != NULL)
-		{
-			delete buffer;
-		}
-
-		RegCloseKey(key_result);
-
-		return status;
-	}
-	catch (const std::exception& exception)
-	{
-		throw exception;
-	}
+	return return_value;
 }
 
 LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, DWORD* output)
@@ -257,11 +207,11 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING
 	DWORD dwIndex = 0;
 	TCHAR szKeyName[MAX_PATH] = { 0 };
 	DWORD cbName = MAX_PATH;
-	int returnValue = EXIT_FAILURE;
+	int return_value = EXIT_FAILURE;
 
 	if (RegOpenKeyEx(hKey, subKey.c_str(), 0, KEY_READ, &hkResult) != ERROR_SUCCESS)
 	{
-		returnValue = EXIT_FAILURE;
+		return_value = EXIT_FAILURE;
 	}
 	else
 	{
@@ -282,7 +232,7 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING
 
 				ZeroMemory(szKeyName, sizeof(szKeyName));
 
-				returnValue = EXIT_SUCCESS;
+				return_value = EXIT_SUCCESS;
 			}
 
 			dwIndex++;
@@ -292,10 +242,10 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING
 		RegCloseKey(hkResult);
 	}
 
-	return returnValue;
+	return return_value;
 }
 
-// TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로???
+
 
 
 
@@ -305,23 +255,23 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING
 //
 //
 //
-//int MOONG::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value, LPTSTR value, ULONG* chars)
+//int MOONG::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_0, LPTSTR value_1, ULONG* chars)
 //{
 //	CRegKey reg_key;
 //
 //	if (reg_key.Open(key_root, key_name, KEY_READ) != ERROR_SUCCESS)
 //	{
-//		return MOONG::REGISTRY::RETURN_CODE::ERROR_REG_OPEN;
+//		//return MOONG::REGISTRY::RETURN_CODE::ERROR_REG_OPEN;
 //	}
 //
-//	if (reg_key.QueryStringValue(value, value, chars) != ERROR_SUCCESS)
+//	if (reg_key.QueryStringValue(value_0, value_1, chars) != ERROR_SUCCESS)
 //	{
-//		MOONG::REGISTRY::RETURN_CODE::ERROR_READ;
+//		//MOONG::REGISTRY::RETURN_CODE::ERROR_READ;
 //	}
 //
 //	if (reg_key.Close() != ERROR_SUCCESS)
 //	{
-//		MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+//		//MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
 //	}
 //
 //	return EXIT_SUCCESS;

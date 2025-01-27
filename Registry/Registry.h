@@ -61,8 +61,8 @@ namespace MOONG
 	public:
 	protected:
 	private:
-		static const unsigned int TOTALBYTES;
-		static const unsigned int BYTEINCREMENT;
+		static const unsigned int TOTAL_BYTES;
+		static const unsigned int BYTE_INCREMENT;
 
 	public:
 		static LSTATUS write(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, const MOONG::STRING_TOOL::tstring data);
@@ -85,7 +85,7 @@ namespace MOONG
 
 		//// ULONG* chars 설명.
 		////		4번째 파라미터인 value가 가리키는 버퍼의 크기 (tchars)입니다. 메서드가 반환 될 때 chars는 null 종결 문자를 포함하여 검색 된 문자열의 크기(tchars)를 포함합니다.
-		//int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value, LPTSTR value, ULONG* chars);	// 예제용으로 남겨놓기.
+		//int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_0, LPTSTR value_1, ULONG* chars);	// 예제용으로 남겨놓기.
 		//int Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value, DWORD& value);					// 예제용으로 남겨놓기.
 	protected:
 	private:
@@ -93,3 +93,5 @@ namespace MOONG
 }
 
 #endif _REGISTRY_H_
+
+// TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로???
