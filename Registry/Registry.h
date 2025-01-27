@@ -81,4 +81,5 @@ namespace MOONG
 
 #endif _REGISTRY_H_
 
+// TODO: 주석처리 되어있는 read 함수들 통합.
 // TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로???
