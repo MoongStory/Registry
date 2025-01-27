@@ -4,7 +4,7 @@
 
 int main()
 {
-	const DWORD TEST_DWORD_DATA = 20211222;
+	const DWORD TEST_DWORD_DATA = 20250125;
 	const TCHAR* const TEST_DWORD_VALUE_NAME = TEXT("dword value name");
 
 	const TCHAR* const TEST_SUB_KEY = TEXT("SOFTWARE\\111_char_test");
