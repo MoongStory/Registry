@@ -153,8 +153,6 @@ int main()
 		tcout << "get_reg_sub_keys[" << i << "]" << std::endl;
 	}
 
-	//status = MOONG::Registry::delete_tree(HKEY_CURRENT_USER, TEST_SUB_KEY);
-
 	status = MOONG::Registry::delete_value(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
 
 	status = MOONG::Registry::delete_value(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME);
