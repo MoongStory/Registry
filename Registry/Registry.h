@@ -62,7 +62,7 @@ namespace MOONG
 
 		static LSTATUS delete_value(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value);
 		static LSTATUS delete_key(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key);
-		//static LSTATUS delete_tree(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key);
+		static LSTATUS delete_tree(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key);
 
 		static const int get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys);
 	protected:

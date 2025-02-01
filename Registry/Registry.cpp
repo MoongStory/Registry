@@ -212,6 +212,11 @@ LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::ts
 #endif
 }
 
+LSTATUS MOONG::Registry::delete_tree(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
+{
+	return RegDeleteTree(key, sub_key.c_str());
+}
+
 const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys)
 {
 	HKEY hkResult = NULL;
