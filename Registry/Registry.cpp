@@ -168,6 +168,25 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
 
 LSTATUS MOONG::Registry::delete_value(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value)
 {
+#if _MSC_VER > 1200
+	CRegKey reg_key;
+
+	LSTATUS return_status = reg_key.Open(key, sub_key.c_str(), KEY_ALL_ACCESS);
+	if (return_status != ERROR_SUCCESS)
+	{
+		return return_status;
+	}
+
+	return_status = reg_key.DeleteValue(value.c_str());
+	if (return_status != ERROR_SUCCESS)
+	{
+		reg_key.Close();
+
+		return return_status;
+	}
+
+	return reg_key.Close();
+#else
 	HKEY key_result = NULL;
 
 	LSTATUS status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_ALL_ACCESS, &key_result);
@@ -181,6 +200,7 @@ LSTATUS MOONG::Registry::delete_value(const HKEY key, const MOONG::STRING_TOOL::
 	RegCloseKey(key_result);
 
 	return status;
+#endif
 }
 
 LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
@@ -194,8 +214,9 @@ LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::ts
 		return return_status;
 	}
 
-	//return_status = reg_key.RecurseDeleteKey(sub_key.c_str());
-	return_status = reg_key.DeleteSubKey(sub_key.c_str());
+	// 설마 syswow64 경로에서 찾는건가?
+	//return_status = reg_key.RecurseDeleteKey(sub_key.c_str()); // 하위 키가 있어도 삭제된다고 함.
+	return_status = reg_key.DeleteSubKey(sub_key.c_str()); // 하위 키가 존재하는 경우 삭제 실패한다고 함.
 	if (return_status != ERROR_SUCCESS)
 	{
 		reg_key.Close();
@@ -206,7 +227,6 @@ LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::ts
 	return reg_key.Close();
 #else
 	return RegDeleteKeyEx(key, sub_key.c_str(), KEY_ALL_ACCESS, 0);
-	//RegDeleteTree
 
 	//return RegDeleteKey(key, sub_key.c_str()); // Visual Studio 버전 낮아서 RegDeleteKeyEx() 함수 지원이 안 될 경우 사용.
 #endif
