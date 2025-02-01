@@ -205,18 +205,42 @@ LSTATUS MOONG::Registry::delete_value(const HKEY key, const MOONG::STRING_TOOL::
 
 LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
 {
-#if _MSC_VER < 1200
+#if _MSC_VER > 1200
 	CRegKey reg_key;
 
-	LSTATUS return_status = reg_key.Open(key, sub_key.c_str(), KEY_ALL_ACCESS);
+	LSTATUS return_status = reg_key.Open(key, sub_key.substr(0, sub_key.rfind(TEXT("\\"))).c_str(), KEY_ALL_ACCESS);
 	if (return_status != ERROR_SUCCESS)
 	{
 		return return_status;
 	}
 
-	// 설마 syswow64 경로에서 찾는건가?
-	//return_status = reg_key.RecurseDeleteKey(sub_key.c_str()); // 하위 키가 있어도 삭제된다고 함.
-	return_status = reg_key.DeleteSubKey(sub_key.c_str()); // 하위 키가 존재하는 경우 삭제 실패한다고 함.
+	return_status = reg_key.RecurseDeleteKey(sub_key.substr(sub_key.rfind(TEXT("\\")) + 1).c_str());
+	if (return_status != ERROR_SUCCESS)
+	{
+		reg_key.Close();
+
+		return return_status;
+	}
+
+	return reg_key.Close();
+#else
+	return RegDeleteTree(key, sub_key.c_str());
+#endif
+}
+
+LSTATUS MOONG::Registry::delete_key_safely(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
+{
+	// TODO: 테스트 필요.
+#if _MSC_VER > 1200
+	CRegKey reg_key;
+
+	LSTATUS return_status = reg_key.Open(key, sub_key.substr(0, sub_key.rfind(TEXT("\\"))).c_str(), KEY_ALL_ACCESS);
+	if (return_status != ERROR_SUCCESS)
+	{
+		return return_status;
+	}
+
+	return_status = reg_key.DeleteSubKey(sub_key.substr(sub_key.rfind(TEXT("\\")) + 1).c_str());
 	if (return_status != ERROR_SUCCESS)
 	{
 		reg_key.Close();
@@ -230,11 +254,6 @@ LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::ts
 
 	//return RegDeleteKey(key, sub_key.c_str()); // Visual Studio 버전 낮아서 RegDeleteKeyEx() 함수 지원이 안 될 경우 사용.
 #endif
-}
-
-LSTATUS MOONG::Registry::delete_tree(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
-{
-	return RegDeleteTree(key, sub_key.c_str());
 }
 
 const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys)
