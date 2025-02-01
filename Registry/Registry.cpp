@@ -18,20 +18,14 @@ LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring
 		return_status = reg_key.SetStringValue(value.c_str(), data.c_str(), REG_SZ);
 		if (return_status != ERROR_SUCCESS)
 		{
-			return return_status;
-		}
-	
-		return_status = reg_key.Close();
-		if (return_status != ERROR_SUCCESS)
-		{
-			return return_status;
-		}
-	
-		return return_status;
-#else
-	LSTATUS return_status = RegSetKeyValue(key, sub_key.c_str(), value.c_str(), REG_SZ, data.c_str(), (DWORD)((data.length() + 1) * sizeof(TCHAR)));
+			reg_key.Close();
 
-	return return_status;
+			return return_status;
+		}
+	
+		return reg_key.Close();
+#else
+	return RegSetKeyValue(key, sub_key.c_str(), value.c_str(), REG_SZ, data.c_str(), (DWORD)((data.length() + 1) * sizeof(TCHAR)));
 #endif
 }
 
@@ -49,25 +43,38 @@ LSTATUS MOONG::Registry::write(const HKEY key, const MOONG::STRING_TOOL::tstring
 	return_status = reg_key.SetDWORDValue(value.c_str(), data);
 	if (return_status != ERROR_SUCCESS)
 	{
+		reg_key.Close();
+
 		return return_status;
 	}
 
-	return_status = reg_key.Close();
-	if (return_status != ERROR_SUCCESS)
-	{
-		return return_status;
-	}
-
-	return return_status;
+	return reg_key.Close();
 #else
-	LSTATUS return_status = RegSetKeyValue(key, sub_key.c_str(), value.c_str(), REG_DWORD, &data, sizeof(DWORD));
-
-	return return_status;
+	return RegSetKeyValue(key, sub_key.c_str(), value.c_str(), REG_DWORD, &data, sizeof(DWORD));
 #endif
 }
 
 LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, TCHAR* const output, const DWORD output_length)
 {
+#if _MSC_VER > 1200
+	CRegKey reg_key;
+
+	LSTATUS return_status = reg_key.Open(key, sub_key.c_str(), KEY_READ);
+	if (return_status != ERROR_SUCCESS)
+	{
+		return return_status;
+	}
+
+	return_status = reg_key.QueryStringValue(value.c_str(), output, (ULONG*)(&output_length));
+	if (return_status != ERROR_SUCCESS)
+	{
+		reg_key.Close();
+
+		return return_status;
+	}
+
+	return reg_key.Close();
+#else
     HKEY key_result = NULL;
 
     LSTATUS return_status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_READ, &key_result);
@@ -92,9 +99,8 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
         return ERROR_INVALID_DATA;
     }
 
-    RegCloseKey(key_result);
-
-    return ERROR_SUCCESS;
+	return RegCloseKey(key_result);
+#endif
 }
 
 LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, MOONG::STRING_TOOL::tstring& output)
@@ -110,6 +116,25 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
 
 LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value, DWORD* output)
 {
+#if _MSC_VER > 1200
+	CRegKey reg_key;
+
+	LSTATUS return_status = reg_key.Open(key, sub_key.c_str(), KEY_READ);
+	if (return_status != ERROR_SUCCESS)
+	{
+		return return_status;
+	}
+
+	return_status = reg_key.QueryDWORDValue(value.c_str(), *output);
+	if (return_status != ERROR_SUCCESS)
+	{
+		reg_key.Close();
+
+		return return_status;
+	}
+
+	return reg_key.Close();
+#else
 	HKEY key_result = NULL;
 
 	LSTATUS return_status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_READ, &key_result);
@@ -135,12 +160,13 @@ LSTATUS MOONG::Registry::read(const HKEY key, const MOONG::STRING_TOOL::tstring 
 		return ERROR_INVALID_DATA;
 	}
 
-	RegCloseKey(key_result);
+	return_status = RegCloseKey(key_result);
 
-	return ERROR_SUCCESS;
+	return return_status;
+#endif
 }
 
-LSTATUS MOONG::Registry::remove(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value)
+LSTATUS MOONG::Registry::delete_value(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value)
 {
 	HKEY key_result = NULL;
 
@@ -157,15 +183,33 @@ LSTATUS MOONG::Registry::remove(const HKEY key, const MOONG::STRING_TOOL::tstrin
 	return status;
 }
 
-LSTATUS MOONG::Registry::remove(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
+LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
 {
-#if _MSC_VER > 1200
-	LSTATUS status = RegDeleteKeyEx(key, sub_key.c_str(), KEY_ALL_ACCESS, 0);
-#else
-	LSTATUS status = RegDeleteKeyA(key, sub_key.c_str());
-#endif
+#if _MSC_VER < 1200
+	CRegKey reg_key;
 
-	return status;
+	LSTATUS return_status = reg_key.Open(key, sub_key.c_str(), KEY_ALL_ACCESS);
+	if (return_status != ERROR_SUCCESS)
+	{
+		return return_status;
+	}
+
+	//return_status = reg_key.RecurseDeleteKey(sub_key.c_str());
+	return_status = reg_key.DeleteSubKey(sub_key.c_str());
+	if (return_status != ERROR_SUCCESS)
+	{
+		reg_key.Close();
+
+		return return_status;
+	}
+
+	return reg_key.Close();
+#else
+	return RegDeleteKeyEx(key, sub_key.c_str(), KEY_ALL_ACCESS, 0);
+	//RegDeleteTree
+
+	//return RegDeleteKey(key, sub_key.c_str()); // Visual Studio 버전 낮아서 RegDeleteKeyEx() 함수 지원이 안 될 경우 사용.
+#endif
 }
 
 const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys)
@@ -217,52 +261,63 @@ const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING
 
 
 
-
-
-
-//
-//
-//
-//int MOONG::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value_0, LPTSTR value_1, ULONG* chars)
+//LSTATUS MOONG::Registry::remove(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key, const MOONG::STRING_TOOL::tstring value)
 //{
+//#if _MSC_VER > 1200
 //	CRegKey reg_key;
 //
-//	if (reg_key.Open(key_root, key_name, KEY_READ) != ERROR_SUCCESS)
+//	LSTATUS return_status = reg_key.Open(key, sub_key.c_str(), KEY_SET_VALUE);
+//	if (return_status != ERROR_SUCCESS)
 //	{
-//		//return MOONG::REGISTRY::RETURN_CODE::ERROR_REG_OPEN;
+//		return return_status;
 //	}
 //
-//	if (reg_key.QueryStringValue(value_0, value_1, chars) != ERROR_SUCCESS)
+//	return_status = reg_key.DeleteValue(value.c_str());
+//	if (return_status != ERROR_SUCCESS)
 //	{
-//		//MOONG::REGISTRY::RETURN_CODE::ERROR_READ;
+//		reg_key.Close();
+//		return return_status;
 //	}
 //
-//	if (reg_key.Close() != ERROR_SUCCESS)
+//	return reg_key.Close();
+//#else
+//	HKEY key_result = NULL;
+//
+//	LSTATUS status = RegOpenKeyEx(key, sub_key.c_str(), 0, KEY_SET_VALUE, &key_result);
+//	if (status != ERROR_SUCCESS)
 //	{
-//		//MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
+//		return status;
 //	}
 //
-//	return EXIT_SUCCESS;
+//	status = RegDeleteValue(key_result, value.c_str());
+//
+//	RegCloseKey(key_result);
+//
+//	return status;
+//#endif
 //}
 //
-//int MOONG::Registry::Read(HKEY key_root, LPCTSTR key_name, LPCTSTR value, DWORD& value)
+//LSTATUS MOONG::Registry::remove(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
 //{
+//#if _MSC_VER > 1200
 //	CRegKey reg_key;
 //
-//	if (reg_key.Open(key_root, key_name, KEY_READ) != ERROR_SUCCESS)
+//	LSTATUS return_status = reg_key.Open(key, sub_key.c_str(), KEY_ALL_ACCESS);
+//	if (return_status != ERROR_SUCCESS)
 //	{
-//		return MOONG::REGISTRY::RETURN_CODE::ERROR_REG_OPEN;
+//		return return_status;
 //	}
 //
-//	if (reg_key.QueryDWORDValue(value, value) != ERROR_SUCCESS)
+//	return_status = reg_key.RecurseDeleteKey(sub_key.c_str());
+//	if (return_status != ERROR_SUCCESS)
 //	{
-//		return MOONG::REGISTRY::RETURN_CODE::ERROR_READ;
+//		reg_key.Close();
+//		return return_status;
 //	}
 //
-//	if (reg_key.Close() != ERROR_SUCCESS)
-//	{
-//		return MOONG::REGISTRY::RETURN_CODE::ERROR_CLOSE;
-//	}
-//
-//	return EXIT_SUCCESS;
+//	return reg_key.Close();
+//#else
+//	LSTATUS status = RegDeleteKeyA(key, sub_key.c_str());
+//	return status;
+//#endif
 //}

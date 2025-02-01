@@ -9,6 +9,7 @@ int main()
 
 	const TCHAR* const TEST_SUB_KEY = TEXT("SOFTWARE\\111_char_test");
 	const TCHAR* const TEST_SUB_KEY_0 = TEXT("SOFTWARE\\111_char_test\\000");
+	const TCHAR* const TEST_SUB_KEY_0_0 = TEXT("SOFTWARE\\111_char_test\\000\\000");
 	const TCHAR* const TEST_SUB_KEY_1 = TEXT("SOFTWARE\\111_char_test\\111");
 	const TCHAR* const TEST_VALUE_NAME_DEFAULT = TEXT("");
 	const TCHAR* const TEST_VALUE_NAME = TEXT("char value name");
@@ -27,6 +28,17 @@ int main()
 	}
 
 	status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY_0, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
+	if (status != ERROR_SUCCESS)
+	{
+		char* message = NULL;
+		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&message, 0, NULL);
+
+		std::cout << "Write fail error_code[" << status << "], message[" << message << "]" << std::endl;
+
+		LocalFree(message);
+	}
+
+	status = MOONG::Registry::write(HKEY_CURRENT_USER, TEST_SUB_KEY_0_0, TEST_VALUE_NAME_DEFAULT, TEST_DATA_DEFAULT);
 	if (status != ERROR_SUCCESS)
 	{
 		char* message = NULL;
@@ -118,7 +130,7 @@ int main()
 		std::wcout << "읽기 결과 (string)[" << string_read_value.c_str() << "]" << std::endl;
 	}
 
-	DWORD dword_read_value;
+	DWORD dword_read_value = 0;
 	status = MOONG::Registry::read(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME, &dword_read_value);
 	if (status != ERROR_SUCCESS)
 	{
@@ -141,17 +153,19 @@ int main()
 		tcout << "get_reg_sub_keys[" << i << "]" << std::endl;
 	}
 
-	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
+	status = MOONG::Registry::delete_value(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_DWORD_VALUE_NAME);
 
-	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME);
+	status = MOONG::Registry::delete_value(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME);
 
-	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
+	status = MOONG::Registry::delete_value(HKEY_CURRENT_USER, TEST_SUB_KEY, TEST_VALUE_NAME_DEFAULT);
 
-	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY_0);
+	status = MOONG::Registry::delete_key(HKEY_CURRENT_USER, TEST_SUB_KEY_0_0);
 
-	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY_1);
+	status = MOONG::Registry::delete_key(HKEY_CURRENT_USER, TEST_SUB_KEY_0);
 
-	status = MOONG::Registry::remove(HKEY_CURRENT_USER, TEST_SUB_KEY);
+	status = MOONG::Registry::delete_key(HKEY_CURRENT_USER, TEST_SUB_KEY_1);
+
+	status = MOONG::Registry::delete_key(HKEY_CURRENT_USER, TEST_SUB_KEY);
 
 	return EXIT_SUCCESS;
 }
