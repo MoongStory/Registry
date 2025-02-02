@@ -223,7 +223,7 @@ int main()
 	}
 
 	std::vector<MOONG::STRING_TOOL::tstring> sub_keys;
-	MOONG::Registry::get_reg_sub_keys(HKEY_CURRENT_USER, TEST_SUB_KEY_0, sub_keys);
+	MOONG::Registry::get_child_keys(HKEY_CURRENT_USER, TEST_SUB_KEY_0, sub_keys);
 	for (auto i : sub_keys)
 	{
 		tcout << "get_reg_sub_keys[" << i << "]" << std::endl;

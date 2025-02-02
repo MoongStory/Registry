@@ -255,7 +255,7 @@ LSTATUS MOONG::Registry::delete_key_safely(const HKEY key, const MOONG::STRING_T
 #endif
 }
 
-const int MOONG::Registry::get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys)
+const int MOONG::Registry::get_child_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys)
 {
 	HKEY hkResult = NULL;
 	LONG lStatus = 0;

@@ -67,7 +67,7 @@ namespace MOONG
 		static LSTATUS delete_key_safely(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key);
 
 		// 파라미터로 넘겨준 키 경로의 자식 키들의 이름 목록을 가져옴.
-		static const int get_reg_sub_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys);
+		static const int get_child_keys(const HKEY hKey, const MOONG::STRING_TOOL::tstring sub_key, std::vector<MOONG::STRING_TOOL::tstring>& output_sub_keys);
 	protected:
 	private:
 	};
