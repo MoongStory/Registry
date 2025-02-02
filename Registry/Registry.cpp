@@ -230,7 +230,6 @@ LSTATUS MOONG::Registry::delete_key(const HKEY key, const MOONG::STRING_TOOL::ts
 
 LSTATUS MOONG::Registry::delete_key_safely(const HKEY key, const MOONG::STRING_TOOL::tstring sub_key)
 {
-	// TODO: 테스트 필요. 테스트 시 레지2개 만들어서 하위 키 있을 때 삭제 안되는지 확인 필요
 #if _MSC_VER > 1200
 	CRegKey reg_key;
 
