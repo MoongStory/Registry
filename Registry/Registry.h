@@ -43,7 +43,9 @@ typedef LONG LSTATUS;
 
 namespace MOONG
 {
-	// TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로???
+	// TODO: 특정 레지스트리 키 하위의 자식 값들을 가져오는 함수 추가.
+	// TODO: 특정 레지스트리 키 하위의 특정 이름의 값들을 가져오는 함수 추가. Read 함수로??? 재귀 함수로
+	// TODO: 특정 레지스트리 키 하위의 모든 값들을 가져오는 함수 추가.
 	class Registry
 	{
 	public:
